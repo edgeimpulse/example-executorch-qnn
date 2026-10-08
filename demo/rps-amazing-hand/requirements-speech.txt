@@ -1,0 +1,27 @@
+# Optional: the local text-to-speech engine for spoken commentary.
+#
+# Kept separate from requirements.txt for two reasons:
+#
+#   1. Licence. piper-tts is GPL-3.0-or-later, because it links espeak-ng for
+#      phonemization. This demo keeps it at arm's length by running it as its
+#      own process behind its HTTP API (start.sh starts it; app/speech.py only
+#      ever POSTs to it) rather than importing it -- the same arrangement the
+#      MeloTTS container had, and the same one used for llama.cpp. Nothing in
+#      this repository imports GPL code. Even so, anyone redistributing this
+#      should confirm that arrangement with whoever handles OSS licensing.
+#
+#   2. It is genuinely optional. Without it the demo runs silently and says so;
+#      nothing else degrades.
+#
+# ./install.sh installs this by default. To skip it:
+#   SKIP_SPEECH=1 ./install.sh
+#
+# Pinned like everything else here: the HTTP API shape (POST /synthesize
+# returning a WAV) is what app/speech.py parses, so bump it deliberately and
+# re-run ./scripts/check-audio.sh on the board afterwards.
+#
+# The [http] extra is required -- it pulls in the server behind
+# `python -m piper.http_server`, which is how the demo talks to it.
+# Prebuilt abi3 wheels exist for manylinux aarch64 (and x86_64, macOS,
+# Windows), so this needs no compiler and no apt packages on the board.
+piper-tts[http]==1.8.*

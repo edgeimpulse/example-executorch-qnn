@@ -1,0 +1,14 @@
+.gradle/
+build/
+local.properties
+.idea/
+*.iml
+.DS_Store
+captures/
+.cxx/
+__pycache__/
+*.apk
+
+# The model is yours to add (see README); don't commit someone else's by accident.
+app/src/main/assets/model.pte
+app/src/main/assets/selftest.jpg

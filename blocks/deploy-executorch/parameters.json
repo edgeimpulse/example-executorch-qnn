@@ -1,0 +1,34 @@
+{
+    "version": 1,
+    "type": "deploy",
+    "info": {
+        "name": "ExecuTorch .pte (CPU int8 + QNN pass-through)",
+        "description": "Packages the trained model as an ExecuTorch program (.pte) for the CPU (XNNPACK, optional PT2E int8), and passes through the learning block's NPU program (model_qnn.pte + export_report.json) when present. Includes a minimal Python runtime harness.",
+        "category": "library",
+        "cliArguments": "",
+        "supportsEonCompiler": false,
+        "mountLearnBlock": true,
+        "showOptimizations": true,
+        "privileged": false,
+        "integrateUrl": "https://github.com/YOUR-ORG/edge-impulse-executorch-qnn/tree/main/blocks/deploy-executorch"
+    },
+    "parameters": [
+        {
+            "name": "ExecuTorch backend",
+            "value": "xnnpack",
+            "type": "select",
+            "param": "backend",
+            "help": "Delegate the model to this ExecuTorch backend when lowering to .pte.",
+            "valid": [
+                {
+                    "label": "XNNPACK (CPU, ARM/x86)",
+                    "value": "xnnpack"
+                },
+                {
+                    "label": "Portable (reference, no delegation)",
+                    "value": "portable"
+                }
+            ]
+        }
+    ]
+}

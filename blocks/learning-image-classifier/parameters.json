@@ -1,0 +1,109 @@
+{
+    "version": 1,
+    "type": "machine-learning",
+    "info": {
+        "name": "PyTorch image classifier (ExecuTorch + QNN)",
+        "description": "Fine-tunes an ImageNet-pretrained MobileNetV2 on Edge Impulse image data and exports an ONNX model for the platform, plus an ExecuTorch .pte program for native PyTorch on-device inference. A compact from-scratch CNN is available for size-constrained targets. Optionally also lowers a quantized model_qnn.pte for the Qualcomm Hexagon NPU (QNN/HTP).",
+        "operatesOn": "image",
+        "imageInputScaling": "0..1",
+        "indRequiresGpu": false,
+        "repositoryUrl": "https://github.com/YOUR-ORG/edge-impulse-executorch-qnn/tree/main/blocks/learning-image-classifier"
+    },
+    "parameters": [
+        {
+            "name": "Number of training epochs",
+            "value": 30,
+            "type": "int",
+            "param": "epochs",
+            "help": "Number of passes over the training set."
+        },
+        {
+            "name": "Learning rate",
+            "value": 0.0001,
+            "type": "float",
+            "param": "learning-rate",
+            "help": "Learning rate for the Adam optimizer. 0.0001 suits fine-tuning the pretrained backbone; raise to around 0.001 if you enable 'Train from scratch'."
+        },
+        {
+            "name": "Batch size",
+            "value": 32,
+            "type": "int",
+            "param": "batch-size",
+            "help": "Number of samples per gradient update."
+        },
+        {
+            "name": "Train from scratch",
+            "value": false,
+            "type": "flag",
+            "param": "no-pretrained",
+            "help": "Train the small from-scratch CNN instead of fine-tuning MobileNetV2. Much smaller and faster, but needs far more data to reach comparable accuracy. Raise the learning rate to around 0.001 if you enable this."
+        },
+        {
+            "name": "Freeze backbone",
+            "value": false,
+            "type": "flag",
+            "param": "freeze-backbone",
+            "help": "Train only the classifier head and leave the pretrained feature extractor unchanged. Faster to train and sometimes better on very small datasets. Ignored when training from scratch."
+        },
+        {
+            "name": "Disable data augmentation",
+            "value": false,
+            "type": "flag",
+            "param": "no-augment",
+            "help": "Turn off training-time horizontal flips, affine jitter and colour jitter. Augmentation usually helps on small datasets, so leave this off unless your data already covers the variation you expect."
+        },
+        {
+            "name": "Export ExecuTorch .pte",
+            "value": true,
+            "type": "flag",
+            "param": "export-pte",
+            "help": "Also export an ExecuTorch program (model.pte) alongside the ONNX model. The .pte is not used by the Edge Impulse SDK but is handy for native PyTorch/ExecuTorch deployment."
+        },
+        {
+            "name": "Export QNN .pte (Qualcomm NPU)",
+            "value": false,
+            "type": "flag",
+            "param": "export-qnn",
+            "help": "Also export model_qnn.pte, int8-quantized and lowered to the Qualcomm QNN backend for the Hexagon NPU (e.g. IQ-9075). Needs the QNN SDK baked into the image. A failure is logged and never fails training; see export_report.json."
+        },
+        {
+            "name": "QNN SoC model",
+            "value": "QCS9100",
+            "type": "string",
+            "param": "soc-model",
+            "help": "ExecuTorch QcomChipset name to compile for. IQ-9075 EVK uses the QCS9100 (Hexagon v73) target."
+        },
+        {
+            "name": "QNN quantization",
+            "value": "8a8w",
+            "type": "select",
+            "param": "quant-scheme",
+            "help": "Activation/weight bit widths. 8a8w is the default and the fastest; 16a8w trades speed for accuracy.",
+            "valid": [
+                {
+                    "label": "8a8w (int8)",
+                    "value": "8a8w"
+                },
+                {
+                    "label": "16a8w",
+                    "value": "16a8w"
+                },
+                {
+                    "label": "16a16w",
+                    "value": "16a16w"
+                },
+                {
+                    "label": "16a4w",
+                    "value": "16a4w"
+                }
+            ]
+        },
+        {
+            "name": "QNN calibration samples",
+            "value": 200,
+            "type": "int",
+            "param": "calibration-samples",
+            "help": "Training images used to calibrate int8 ranges."
+        }
+    ]
+}

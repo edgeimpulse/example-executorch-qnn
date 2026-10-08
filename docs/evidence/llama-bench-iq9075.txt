@@ -1,0 +1,27 @@
+cd pkg-linux
+LD_LIBRARY_PATH=./lib ADSP_LIBRARY_PATH=./lib \
+  ./bin/llama-bench -m ../models/Llama-3.2-1B-Instruct-Q4_0.gguf --device HTP0 -ngl 99
+LD_LIBRARY_PATH=./lib ADSP_LIBRARY_PATH=./lib \
+  ./bin/llama-bench -m ../models/Llama-3.2-1B-Instruct-Q4_0.gguf -ngl 0
+ggml-hex: Loading driver libcdsprpc.so
+ggml-hex: FASTRPC_GET_DOMAINS query failed (0x6c), using static CDSP domains
+ggml-hex: Hexagon backend (experimental) : allocating new registry : ndev 1
+ggml-hex: Hexagon Arch version v73, DMA64 disabled
+ggml-hex: device 0: HTP0 (phys=0, virt=0, domain=cdsp:3)
+| model                          |       size |     params | backend    | ngl | dev          |            test |                  t/s |
+| ------------------------------ | ---------: | ---------: | ---------- | --: | ------------ | --------------: | -------------------: |
+| llama 1B Q4_0                  | 729.75 MiB |     1.24 B | HTP        |  99 | HTP0         |           pp512 |       1619.46 ± 3.91 |
+| llama 1B Q4_0                  | 729.75 MiB |     1.24 B | HTP        |  99 | HTP0         |           tg128 |         45.20 ± 0.15 |
+
+build: 6a2743f02 (11271)
+ggml-hex: Loading driver libcdsprpc.so
+ggml-hex: FASTRPC_GET_DOMAINS query failed (0x6c), using static CDSP domains
+ggml-hex: Hexagon backend (experimental) : allocating new registry : ndev 1
+ggml-hex: Hexagon Arch version v73, DMA64 disabled
+ggml-hex: device 0: HTP0 (phys=0, virt=0, domain=cdsp:3)
+| model                          |       size |     params | backend    | ngl |            test |                  t/s |
+| ------------------------------ | ---------: | ---------: | ---------- | --: | --------------: | -------------------: |
+| llama 1B Q4_0                  | 729.75 MiB |     1.24 B | HTP        |   0 |           pp512 |        282.17 ± 1.60 |
+| llama 1B Q4_0                  | 729.75 MiB |     1.24 B | HTP        |   0 |           tg128 |         56.67 ± 0.73 |
+
+build: 6a2743f02 (11271)

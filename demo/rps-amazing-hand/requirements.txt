@@ -1,0 +1,15 @@
+# Pinned deliberately. A .pte is only guaranteed to load on the ExecuTorch
+# release that built it plus the following one. This venv runs only the CPU
+# fallback models/model.pte, which the DEPLOY block exported with 1.3.1.
+# (The NPU model runs in the rps-npu service, built from source at v1.5.1.)
+# Bump together with the model you put in models/, and re-test on device.
+executorch==1.3.1
+torch==2.12.*
+ 
+fastapi
+httpx
+numpy
+opencv-python
+rustypot
+six
+uvicorn[standard]

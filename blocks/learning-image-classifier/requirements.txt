@@ -1,0 +1,17 @@
+# CPU-only PyTorch wheels (avoids pulling ~3 GB of CUDA packages).
+--index-url https://download.pytorch.org/whl/cpu
+--extra-index-url https://pypi.org/simple
+
+torch==2.12.1
+torchvision==0.27.*
+numpy==2.0.2
+onnx==1.17.0
+
+# Produces model.pte (--export-pte) and the QNN model_qnn.pte (--export-qnn).
+# Version rule: a .pte must be run by the ExecuTorch release that produced it,
+# so the board-side runtime is built from the SAME tag (see board/steps/build_runtime.sh,
+# ET_TAG=v1.5.1). 1.5.1 pins the Qualcomm AI Runtime (QNN) SDK 2.37.0.250724,
+# which the Dockerfile bakes into the image. Bump all three together.
+# torch: ExecuTorch 1.5.1 is built against torch 2.14; 2.12.1 is what produced
+# the verified model. Moving to 2.14 is a TODO (see docs/versions.md).
+executorch==1.5.1

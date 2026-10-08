@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Edge Impulse block runner artifacts
+ei-block-data/
+input/
+out/
+output/
+
+# Model artifacts
+*.onnx
+*.pte
+*.pth
+.pytest_cache/
+# Edge Impulse block identity is per organization -- each user creates their own
+.ei-block-config

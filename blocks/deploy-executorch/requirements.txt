@@ -1,0 +1,15 @@
+# CPU-only PyTorch wheels (avoids pulling ~3 GB of CUDA packages).
+--index-url https://download.pytorch.org/whl/cpu
+--extra-index-url https://pypi.org/simple
+
+# This block builds the CPU (XNNPACK) model.pte from Studio's ONNX export.
+# The QNN model_qnn.pte is NOT built here -- it is produced by the learning
+# block and only copied through, so this ExecuTorch version does not need to
+# match the learning block's.
+# The CPU .pte this produces must be loadable by the device's Python runtime
+# (a .pte loads on the release that built it and the next one), see docs/versions.md.
+torch==2.12.1
+numpy==2.0.2
+onnx==1.17.0
+onnx2torch==1.5.15
+executorch==1.3.1

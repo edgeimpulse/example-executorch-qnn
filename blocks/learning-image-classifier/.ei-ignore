@@ -1,0 +1,10 @@
+input/
+out/
+ei-block-data/
+.venv/
+__pycache__/
+.pytest_cache/
+.pytest_cache/
+tests/
+assets/
+README.md

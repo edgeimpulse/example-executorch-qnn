@@ -1,0 +1,4 @@
+input/
+testdata/
+__pycache__/
+.venv/

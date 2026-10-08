@@ -1,0 +1,11 @@
+# CPU-only PyTorch wheels (avoids pulling ~3 GB of CUDA packages).
+--index-url https://download.pytorch.org/whl/cpu
+--extra-index-url https://pypi.org/simple
+
+# Same pins as blocks/learning-image-classifier (verified in Studio with the QNN export).
+# A .pte must be run by the ExecuTorch release that produced it: the board runtime
+# (board/steps/build_runtime.sh) is built from the same tag, v1.5.1.
+torch==2.12.1
+numpy==2.0.2
+onnx==1.17.0
+executorch==1.5.1

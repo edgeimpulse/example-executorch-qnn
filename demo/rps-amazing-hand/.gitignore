@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Large / machine-specific artifacts that are fetched or built, never committed
+models/*.gguf
+models/model_qnn.pte
+models/piper/
+pkg-linux/
+pkg-linux.zip
+
+# Runtime caches and captured frames
+.cache/
+*.log

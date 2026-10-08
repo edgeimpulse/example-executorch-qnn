@@ -1,0 +1,36 @@
+[
+    {
+        "name": "Export QNN .pte (Qualcomm NPU)",
+        "value": false,
+        "type": "flag",
+        "param": "export-qnn",
+        "help": "Also export model_qnn.pte, int8-quantized and lowered to the Qualcomm QNN backend for the Hexagon NPU (e.g. IQ-9075). A failure is logged and never fails training; see export_report.json."
+    },
+    {
+        "name": "QNN SoC model",
+        "value": "QCS9100",
+        "type": "string",
+        "param": "soc-model",
+        "help": "ExecuTorch QcomChipset name to compile for. IQ-9075 EVK uses the QCS9100 (Hexagon v73) target."
+    },
+    {
+        "name": "QNN quantization",
+        "value": "8a8w",
+        "type": "select",
+        "param": "quant-scheme",
+        "help": "Activation/weight bit widths. 8a8w is the default and the fastest; 16a8w trades speed for accuracy.",
+        "valid": [
+            {"label": "8a8w (int8)", "value": "8a8w"},
+            {"label": "16a8w", "value": "16a8w"},
+            {"label": "16a16w", "value": "16a16w"},
+            {"label": "16a4w", "value": "16a4w"}
+        ]
+    },
+    {
+        "name": "QNN calibration samples",
+        "value": 200,
+        "type": "int",
+        "param": "calibration-samples",
+        "help": "Training samples used to calibrate int8 ranges."
+    }
+]

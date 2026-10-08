@@ -1,0 +1,6 @@
+landscape_rot0_roi100_s96 320 240 0 100 96
+landscape_rot0_roi60_s160 320 240 0 60 160
+portrait_rot90_roi60_s96 320 240 90 60 96
+portrait_rot270_roi60_s96 320 240 270 60 96
+upside_rot180_roi100_s96 320 240 180 100 96
+full_640x480_rot270_roi60_s160 640 480 270 60 160

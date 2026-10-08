@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rock Paper Scissors</title>
+  <link rel="preload" href="/fonts/barlow-extrabold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/barlow-semibold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <h1 class="site-title">ROCK, PAPER, SCISSORS</h1>
+    <h2 class="site-subtitle">⁉️ Can you beat The Amazing Hand ⁉️</h2>
+  </header>
+
+  <div class="layout">
+
+    <!-- 1/3 column: controls -->
+    <aside class="sidebar">
+
+      <div class="scoreboard-row">
+        <section class="panel round-panel">
+          <h2>Round</h2>
+          <div class="round-value">
+            <span id="round-current">-</span><span id="round-separator" hidden>/</span><span id="round-total"></span>
+          </div>
+        </section>
+
+        <section class="panel score-panel">
+          <div class="score-line">
+            <div class="score-block">
+              <span class="score-label">A.H.</span>
+              <span id="score-machine" class="score-value">0</span>
+            </div>
+            <div class="score-sep">&ndash;</div>
+            <div class="score-block">
+              <span class="score-label">You</span>
+              <span id="score-human" class="score-value">0</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="match-controls">
+        <button type="button" id="start-button" class="start-button">Start Match</button>
+        <button type="button" id="reset-button" class="reset-button">Reset Match</button>
+      </div>
+
+      <section class="panel commentary-panel">
+        <h2>The Amazing Hand speaks</h2>
+        <p id="commentary-text" class="commentary-text placeholder">
+          💤 😴 💤
+        </p>
+      </section>
+
+      <details class="panel config-panel">
+        <summary class="config-summary">
+          <h2 class="config-heading">Configuration</h2>
+        </summary>
+
+        <div class="config-body">
+          <div class="config-column">
+            <h3 class="config-subhead">Strategy</h3>
+            <select id="strategy-select" class="config-select" name="strategy">
+              <option value="random" selected>Random</option>
+              <option value="always_win">Always Win</option>
+              <option value="always_lose">Always Lose</option>
+            </select>
+          </div>
+
+          <div class="config-column">
+            <h3 class="config-subhead">Rounds</h3>
+            <select id="rounds-select" class="config-select" name="rounds">
+              <option value="1">1</option>
+              <option value="3" selected>3</option>
+              <option value="7">7</option>
+            </select>
+          </div>
+        </div>
+      </details>
+
+      <!-- Shares config-panel's styling so the summary chevron and padding
+           come for free; artifact-panel only adds what is new. -->
+      <details class="panel config-panel artifact-panel" id="artifact-panel">
+        <summary class="config-summary">
+          <span class="artifact-summary-left">
+            <h2 class="config-heading">Artifacts</h2>
+            <span id="artifact-badge" class="artifact-badge">&hellip;</span>
+          </span>
+        </summary>
+
+        <div class="artifact-body" id="artifact-body">
+          <p class="artifact-note">Reading the model files&hellip;</p>
+        </div>
+      </details>
+
+    </aside>
+
+    <!-- 2/3 column: gameplay -->
+    <main class="game-area">
+
+      <section class="panel arena-panel">
+        <div class="arena-wrap">
+
+          <div class="arena">
+
+            <div class="arena-column">
+              <div class="choice-square machine-square">
+                <span class="square-label">Amazing Hand</span>
+                <span id="machine-gesture" class="gesture-emoji"></span>
+              </div>
+            </div>
+
+            <div class="vs">VS</div>
+
+            <div class="arena-column">
+              <div class="choice-square camera-square">
+                <span class="square-label">You</span>
+                <img id="feed" alt="" hidden>
+              </div>
+            </div>
+
+          </div>
+
+          <div id="shoot-overlay" class="shoot-overlay hidden">
+            <span id="shoot-text" class="shoot-text">Rock&hellip;</span>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="panel match-status-panel" aria-live="polite">
+        <p id="match-status-text" class="match-status-text">Let's see what you've got!</p>
+      </section>
+
+      <section class="panel history-panel">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Round</th>
+              <th>Amazing Hand</th>
+              <th>You</th>
+              <th>Winner</th>
+            </tr>
+          </thead>
+          <tbody id="history-body">
+            <tr class="placeholder-row">
+              <td colspan="4">No rounds played yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
