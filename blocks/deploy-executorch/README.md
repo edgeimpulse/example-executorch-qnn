@@ -79,5 +79,5 @@ The block then appears on the project's **Deployment** page under custom blocks.
 
 ## Known limitations
 
-- The CPU `model.pte` comes from an **ONNX round trip**, not from the PyTorch module that was trained. For standard CNNs it reaches the same accuracy, but unusual ops may not convert. The learning block's native float32 `model.pte` is in `_inputs/`; making it the main CPU artifact is on the [roadmap](../../docs/roadmap.md).
+- The CPU `model.pte` comes from an **ONNX round trip**, not from the PyTorch module that was trained. For standard CNNs it reaches the same accuracy, but unusual ops may not convert. The learning block's native float32 `model.pte` is in `_inputs/`; making it the main CPU artifact is a known improvement, not yet made.
 - `build.py` still prints a filesystem scan (`scout()`) and dumps `_inputs/` (`DUMP_INPUTS = True`). Both are deliberate during development and can be turned off.

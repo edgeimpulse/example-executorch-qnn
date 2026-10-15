@@ -9,9 +9,8 @@ Reports accuracy (should match accuracy_on_npu.py exactly), per-call round-trip 
 """
 import os, sys, time
 import numpy as np
-# npu_client.py lives with the demo app (single copy): ../demo/rps-amazing-hand/app
-_HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(_HERE, "..", "..", "demo", "rps-amazing-hand", "app"))
+# npu_client.py sits beside this script, so the import needs no path setup.
+# Any application talking to the service keeps its own copy of that client.
 from npu_client import NpuClient, softmax
 
 

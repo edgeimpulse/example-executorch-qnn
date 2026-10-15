@@ -107,7 +107,7 @@ The service exists because `qnn_executor_runner` only processes batches of files
   - Request: `u32 n_bytes` followed by float32 data in the model's input layout. Sending `n_bytes = 0xFFFFFFFF` asks for model info as JSON.
   - Response: `u32 status` (0 ok, 1 bad size, 2 failed), `u32 n_floats`, `u32 infer_us`, then the logits.
 - **`--selftest`** runs 20 inferences and prints the median and p95 latency. The systemd unit runs it in `ExecStartPre`, so the service only starts if the NPU really works. Otherwise the app falls back to the CPU.
-- The Python client is [`demo/rps-amazing-hand/app/npu_client.py`](../demo/rps-amazing-hand/app/npu_client.py). It is about 120 lines and needs only numpy, so any app can use it.
+- The Python client is [`board/steps/npu_client.py`](steps/npu_client.py). It is about 120 lines and needs only numpy, so any app can use it.
 
 ### Service reference
 

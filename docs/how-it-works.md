@@ -127,20 +127,3 @@ The systemd unit:
 - restarts on failure
 
 The same source builds on a laptop against the pip wheel's C++ SDK with XNNPACK instead (`tools/build_npu_server_cpu.sh`). That makes the sidecar testable without the board.
-
-## 5. In the demo app
-
-`app/pte_perception.py` → `HybridClassifier` (`app/npu_inference.py`) → `NpuClient` (`app/npu_client.py`):
-
-- **Each frame:**
-  1. Center-crop, resize to the **NPU model's** input size (from INFO), RGB, /255, NCHW.
-  2. Send it to the socket and apply softmax to the logits.
-  3. If the call fails, reprocess the same frame at the **CPU model's** size and run `models/model.pte` with the ExecuTorch Python runtime. That model has softmax built in.
-- **Reconnects** are attempted every 5 s, and a log line marks each change: `NPU ACTIVE` / `CPU FALLBACK`.
-- **Gates.** The probabilities are averaged over 5 frames, then must pass confidence ≥ 0.75, a margin ≥ 0.35 over the runner-up, and `unknown` ≤ 0.15. Otherwise there is no detection, and an empty round resolves as "no gesture".
-- **The LLM** is a separate process: `llama-server --device HTP0 -ngl 99`, with Llama-3.2-1B Q4_0. It opens its own FastRPC session on the same cDSP. The two processes share the NPU but nothing else.
-- **Speech** is a third process, `python -m piper.http_server`, and the only one on the **CPU** — the NPU is already carrying the two above. `app/speech.py` POSTs a line, gets a WAV back, strips it to raw PCM and writes that into a long-lived audio-player pipe. The fixed clips (countdown words, lead-ins) are synthesized once at startup and cached on disk, so the cues that must land on a beat never wait on synthesis.
-- **The hand** is `app/actuation.py` over a serial link to eight servos. Every method offloads its blocking I/O with `asyncio.to_thread`, because the same event loop times the countdown audio.
-
-Both of those last two are optional and fail soft: each resolves to a null implementation that does nothing, so a missing voice or an unplugged hand costs that feature and nothing else. [Speech and actuation](speech-and-actuation.md) covers both in full.
-- **`app/artifact.py`** closes the loop for a spectator: it hashes and parses both `.pte` files once at startup and serves the result at `GET /artifact`, next to the live backend from `detector.status()`. The sidebar panel turns the project's "one training run, two artifacts" claim into something you can read off the screen and test by stopping the service mid-match ([demo README](../demo/rps-amazing-hand/README.md#artifact-panel)).

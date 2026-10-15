@@ -16,12 +16,7 @@ Version mismatches caused most of the problems in this project. This page lists 
 | Learning block image (`blocks/learning-image-classifier`) | **1.5.1** | 2.12.1 (Studio-verified) | SDK **2.37.0.250724** built in | Produces `model.pte` and `model_qnn.pte` |
 | Board native build (`board/setup.sh` → `steps/build_runtime.sh`) | **v1.5.1** source | 2.14.0 CPU (build-time code generation only) | apt **`libqnn1` / `libqnn-dev` 2.46.0** (headers + runtime) | Runs `model_qnn.pte`. The 2.37 binary on the 2.46 runtime works (rule 2). |
 | Deploy block image (`blocks/deploy-executorch`) | 1.3.1 | 2.12.1 | — | Builds the CPU int8 `model.pte` from ONNX. Passes `model_qnn.pte` through untouched. |
-| Demo app venv (`demo/rps-amazing-hand/requirements.txt`) | 1.3.1 | 2.12.* | — | Runs the CPU fallback `models/model.pte`, which came from the deploy block |
-| The booth board's existing env (`~/rps-env`, not created by this repo) | 1.4.1 | 2.14.0 | — | Ran the 1.3.1 CPU model (rule 1, next release) |
 | Laptop tools (`tools/`) | 1.5.1 | **2.14.0** | — | Rule 3. The release's 1.3.1 CPU `model.pte` loads and runs here too (checked). |
-| Android app (`demo/rps-android`, `gradle.properties`) | `executorch-android` 1.3.1 | — | — | Runs the deploy block's CPU `model.pte` on the phone's CPU |
-| llama.cpp (commentary) | — | — | Hexagon SDK in `ghcr.io/snapdragon-toolchain/arm64-linux:v0.7` | Build 6a2743f02 (b11271); kernels for v73/v75/v79/v81 |
-| Piper (speech, `requirements-speech.txt`) | — | — | — | `piper-tts[http]==1.8.*`, prebuilt `manylinux_2_17_aarch64` abi3 wheel. CPU only — the NPU is taken ([speech and actuation](speech-and-actuation.md)). Pinned because `app/speech.py` parses the `POST /synthesize` WAV response; bump it deliberately and re-run `scripts/check-audio.sh` on the board. |
 
 Board OS: Ubuntu 24.04 (glibc 2.39, g++ 13.3, Python 3.12.3), Qualcomm IoT PPA `ppa:ubuntu-qcom-iot/qcom-ppa`.
 

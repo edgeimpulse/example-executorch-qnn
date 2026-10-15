@@ -4,17 +4,21 @@
 
 """A stand-in for board/npu_server that runs a CPU .pte instead of the NPU.
 
-It speaks the exact same UNIX-socket protocol, so the demo app's NPU path
-(npu_client.py -> HybridClassifier -> per-frame CPU fallback) can be exercised
-on a laptop with no Qualcomm hardware:
+It speaks the exact same UNIX-socket protocol, so an application's NPU path
+(npu_client.py -> your own CPU fallback) can be exercised on a laptop with no
+Qualcomm hardware:
 
-    python tools/mock_npu_server.py --model demo/rps-amazing-hand/models/model.pte \
+    python tools/mock_npu_server.py --model model.pte \
         --socket /tmp/rps-npu.sock
-    # in another shell
-    cd demo/rps-amazing-hand && RPS_NPU_SOCKET=/tmp/rps-npu.sock ./start.sh
+    # in another shell, point your application at that socket
+    RPS_NPU_SOCKET=/tmp/rps-npu.sock <your application>
 
-The app will log "NPU ACTIVE"; stop this script and it logs "CPU FALLBACK" and
-keeps playing. NOTHING here touches an NPU -- it is a protocol double.
+    # or just call it with the client in this repository
+    python board/steps/test_npu_service.py X_split_test.npy Y_split_test.npy
+
+A client sees a working service; stop this script and its calls return None,
+which is the signal to fall back to a CPU .pte for that frame. NOTHING here
+touches an NPU -- it is a protocol double.
 
 Protocol (little-endian; see board/npu_server/npu_server.cpp):
     request : u32 n_bytes + float32 NCHW   (n_bytes == 0xFFFFFFFF -> INFO)

@@ -20,8 +20,8 @@ pip install --index-url https://download.pytorch.org/whl/cpu --extra-index-url h
 Example:
 
 ```text
-$ python tools/inspect_pte.py demo/rps-amazing-hand/models/model.pte
-demo/rps-amazing-hand/models/model.pte
+$ python tools/inspect_pte.py model.pte
+model.pte
   size      : 2418.3 KB   sha256 3c0a837d3e5ada18
   method    : forward
   inputs    : float32[1, 3, 160, 160]

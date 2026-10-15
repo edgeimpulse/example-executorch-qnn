@@ -8,11 +8,9 @@ This guide goes from an empty Studio project to the game running on the IQ-9075 
 |---|---|
 | An Edge Impulse account (a free developer profile is enough for the learning block) | Training |
 | An Edge Impulse **Enterprise** org | The deployment block. Optional: you can run the learning block locally instead. |
-| An x86_64 machine with Docker (Linux, or a Mac with Rosetta enabled in Docker Desktop) | Building and testing the blocks, and cross-compiling llama.cpp |
+| An x86_64 machine with Docker (Linux, or a Mac with Rosetta enabled in Docker Desktop) | Building and testing the blocks |
 | A Qualcomm Dragonwing **IQ-9075 EVK** with Ubuntu 24.04, network access, a monitor or SSH | The NPU |
-| A USB webcam (V4L2, e.g. Logitech C920) | The demo |
-| *Optional:* a Pollen Robotics [Amazing Hand](https://github.com/pollen-robotics/AmazingHand) (8× Feetech SCS0009, serial bus adapter on `/dev/ttyACM0`) | The robot opponent |
-| *Optional:* a speaker plus a TTS container | Spoken commentary  |
+| *Optional:* a USB webcam (V4L2, e.g. Logitech C920) | Running an application against the service |
 
 ## 1. Train in Studio
 
@@ -103,60 +101,35 @@ cd ~/edge-impulse-executorch-qnn/board
 
 **No build:** if you have a runtime package from `./package.sh` on another IQ-9075 with the same OS, run `./install-prebuilt.sh <package.tar.gz> ~/npu-model/model_qnn.pte ~/npu-model/export_report.json` instead of `setup.sh`.
 
-## 5. Run the demo
+## 5. Use the model from an application
+
+At this point the NPU runs your model and `verify.sh` has proved it. Anything
+that wants inferences talks to the `rps-npu` service over its UNIX socket.
 
 ```bash
-cd ~/edge-impulse-executorch-qnn/demo/rps-amazing-hand
-cp ~/npu-model/labels.txt models/labels.txt     # must match the model's output order
-# Optional: replace models/model.pte with the CPU model from the same training run
-./install.sh
-./start.sh                 # pick the camera; open http://<evk-ip>:8000
+# the service is already running after step 4
+systemctl status rps-npu
+journalctl -u rps-npu | tail             # FastRPC "domain 3" lines mean the cDSP
+
+# call it from Python with the client in this repository
+~/npu-tools/bin/python board/steps/test_npu_service.py \
+    ~/npu-model/X_split_test.npy ~/npu-model/Y_split_test.npy
 ```
 
-Look for these startup lines:
+`board/steps/npu_client.py` is that client, about 120 lines depending only on
+numpy. Copy it into your application, or use it as a reference. The README's
+[Using it in your own application](../README.md#using-it-in-your-own-application)
+section shows the calling pattern and the CPU-fallback behaviour.
 
-```text
-NPU: rps-npu service socket found at /run/rps-npu/npu.sock.
-detector: NPU ACTIVE ([1, 3, 96, 96])
-```
-
-**Optional extras.** Each is independent, and each is skipped with a message naming what is missing, so add them one at a time and confirm with the check script before moving on. Background for the last two is in [speech and actuation](speech-and-actuation.md).
-
-- **LLM commentary.** On the x86 machine, clone llama.cpp, check out the tested build (`git checkout 6a2743f02`), build `pkg-linux.zip` with `demo/rps-amazing-hand/scripts/build-llama-hexagon.sh`, and unzip it to `~/pkg-linux` on the board. Then run `./scripts/fetch-llm-model.sh` and `./scripts/check-llama-hexagon.sh models/Llama-3.2-1B-Instruct-Q4_0.gguf`. `start.sh` picks it up automatically.
-
-- **Spoken commentary.** Runs on the CPU, locally, with no container.
-
-  ```bash
-  ./scripts/fetch-tts-voice.sh        # a voice is two files: .onnx and .onnx.json
-  ./scripts/check-audio.sh            # player, output device and voice, tested apart
-  ```
-
-  `install.sh` already added the engine (`SKIP_SPEECH=1` skips it). If the board has no PCM player, `check-audio.sh` says so: `sudo apt install alsa-utils` is the smallest fix. If every stage passes but you hear nothing, the player opened the wrong output — `./scripts/check-audio.sh --list`, then `--device <name>`, and make it permanent with `TTS_AUDIO_DEVICE`. `start.sh` then starts the Piper server itself.
-
-- **Amazing Hand.**
-  1. Add your user to the serial port's group: `sudo usermod -aG dialout $USER`, then log in again (or `newgrp dialout`).
-  2. Verify it before involving the web app:
-
-     ```bash
-     .venv/bin/python scripts/test-hand.py
-     ```
-
-     This checks the port and permissions, then drives the real actuator through every pose. A clean exit only proves the servos accepted the commands, so watch the hand: paper should be flat with all four fingers extended, and scissors should show exactly two.
-  3. If a finger sits visibly wrong, adjust that motor's offset in `AMAZING_HAND_MIDDLE_CALIBRATION` (`app/config.py`). Order is motors 1–8 = index, index, middle, middle, ring, ring, thumb, thumb. Try it with `--cal 15,-13,0,-12,0,3,10,-10` first. The committed values are for a left hand (`AMAZING_HAND_SIDE = 2`).
-  4. Run `ENABLE_AMAZING_HAND=1 ./start.sh`.
+A complete application built this way — a camera loop, per-frame fallback, and
+an Android app running the portable `model.pte` — is in the separate
+**demo-executorch-qnn** repository.
 
 ## 6. Checklist
 
-- [ ] Training log: `QNN export status: ok`, delta ≤ 1–2 points
-- [ ] `inspect_pte.py model_qnn.pte` → `delegates : QnnBackend`
+- [ ] Training log: `QNN export status: ok`, delta <= 1-2 points
+- [ ] `inspect_pte.py model_qnn.pte` -> `delegates : QnnBackend`
 - [ ] `verify.sh`: all checks PASS/DONE, and the NPU accuracy matches the report's int8 accuracy
 - [ ] `systemctl status rps-npu` shows active; `journalctl -u rps-npu` shows `domain 3` FastRPC lines
-- [ ] The app prints `NPU ACTIVE`. `sudo systemctl stop rps-npu` → `CPU FALLBACK`, and the game continues. Restart it → `NPU ACTIVE` again.
-- [ ] `RPS_LOG_PROBS=1 ./start.sh`: an empty box is rejected, and clear gestures are accepted
-
-If you added the optional extras:
-
-- [ ] `check-llama-hexagon.sh` shows an HTP row, and the app starts with commentary enabled
-- [ ] `check-audio.sh` passes all three stages **and** you can hear both the tone and the spoken line
-- [ ] `test-hand.py` completes, and paper, rock and scissors each look right on the physical hand
-- [ ] One full match with everything on: the voice tracks the on-screen countdown, the hand throws on the shoot beat, and detection still reports `NPU ACTIVE` afterwards
+- [ ] `test_npu_service.py` reports the same accuracy as `verify.sh`, and a per-call latency you are happy with
+- [ ] `sudo systemctl stop rps-npu` -> your client's calls return `None`, so it can fall back to `model.pte`. Restart it -> calls succeed again.

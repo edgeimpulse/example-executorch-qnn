@@ -220,12 +220,12 @@ SVC=kws-npu ./verify.sh ~/kws                                          # input s
   3. Compare them on object cells, the same `object_cell_accuracy` the report used.
 - Each model gets its own service. `SVC=` sets the name, and the socket is `/run/$SVC/npu.sock`. The RPS demo keeps using `rps-npu`.
 
-**Your application** talks to the service with [`npu_client.py`](../demo/rps-amazing-hand/app/npu_client.py), about 120 lines that depend only on numpy. Give it your service's socket, for example `NpuClient("/run/kws-npu/npu.sock")`:
+**Your application** talks to the service with [`npu_client.py`](../board/steps/npu_client.py), about 120 lines that depend only on numpy. Give it your service's socket, for example `NpuClient("/run/kws-npu/npu.sock")`:
 1. Send one float32 sample in the model's layout.
 2. Get the logits back.
 3. Apply softmax: over the classes for KWS and timeseries, or over the channel axis of each cell for FOMO, after reshaping to `[C, H/8, W/8]`.
 
-The `HybridClassifier` pattern (NPU first, CPU `.pte` fallback on each call; [`npu_inference.py`](../demo/rps-amazing-hand/app/npu_inference.py)) carries over unchanged. Pass `sock_path`, or set `RPS_NPU_SOCKET`, because its default is the RPS service.
+The NPU-first pattern carries over unchanged: call the service for each input, and when `infer()` returns `None` answer that one from a CPU `.pte` instead. Pass `sock_path` to `NpuClient`, or set `RPS_NPU_SOCKET`, since its default points at this repository's service name. A worked implementation of the pattern — including loading the CPU model eagerly so the first failure doesn't stall — is in the **demo-executorch-qnn** repository.
 
 **A large part of the work for KWS and timeseries sits in the input path.** The model consumes the same features Studio's processing block produced: MFE or MFCC frames, spectral-analysis values, or a raw window. Those features must be recreated on the device with the same parameters. `dsp_metadata.json` carries the metadata, and the deployment block copies it into `_inputs/` when Studio provides it. This remains a CPU-side issue, not an NPU one.
 

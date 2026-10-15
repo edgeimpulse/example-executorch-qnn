@@ -5,74 +5,57 @@ The third-party components this project uses, and their licenses.
 This project's own code is under The Clear BSD License ([LICENSE](LICENSE)).
 Everything below is somebody else's and keeps its own terms.
 
-Nothing listed is redistributed by this repository except where the "Shipped
-here?" column says so — the rest is fetched by scripts at install time. If you
-redistribute this project or build on it, check that column first: it is the
-line between "we point at it" and "we ship it".
+**Nothing listed here is redistributed by this repository.** Every component is
+fetched from its own distributor at build or install time. That is the line
+between "we point at it" and "we ship it", and in this repository nothing is on
+the "we ship it" side — see [NOTICE](NOTICE) for the full statement.
 
 ## Runtime and build dependencies
 
 | Component | License | Shipped here? |
 |---|---|---|
 | ExecuTorch, PyTorch, torchvision | BSD-3-Clause | no — pip |
-| llama.cpp (commentary engine) | MIT | no — built by `scripts/build-llama-hexagon.sh` |
-| Piper (TTS engine, `piper-tts`) | **GPL-3.0-or-later** | no — pip, see below |
-| Amazing Hand — software | Apache-2.0 | no |
-| Amazing Hand — mechanical design | CC BY 4.0 | no — attribution required if you publish the CAD or photos of it |
-| `rustypot` (servo driver) | Apache-2.0 | no — pip |
-| FastAPI, httpx, onnxruntime | MIT | no — pip |
-| uvicorn, numpy | BSD | no — pip |
+| `onnx2torch`, `onnxruntime` | MIT | no — pip |
+| `numpy` | BSD | no — pip |
 | `opencv-python` | Apache-2.0 | no — pip |
-| Atkinson Hyperlegible, Barlow (web fonts) | SIL OFL 1.1 | **yes** — `demo/rps-amazing-hand/app/static/fonts/`, with the per-family license text alongside, as the OFL requires |
-| Qualcomm QNN SDK / `libqnn1` | Qualcomm proprietary | no — Ubuntu IoT PPA |
+| Qualcomm QNN SDK / `libqnn1` | Qualcomm proprietary | no — Ubuntu IoT PPA, or fetched by ExecuTorch |
 
-## Models and data
+## Pretrained weights
 
 | Artifact | License | Notes |
 |---|---|---|
-| Llama 3.2 1B Instruct (GGUF) | **Llama 3.2 Community License** | Not an OSI open-source license. Fetched by `scripts/fetch-llm-model.sh`; never redistributed here. See below. |
-| Piper voice (`en_US-kristin-medium`) | public domain (LibriVox) | Fetched by `scripts/fetch-tts-voice.sh`. **The voice catalogue is mixed — see below.** |
-| `models/model.pte` (gesture classifier) | — | Trained in this project. Fine-tuned from torchvision's ImageNet MobileNetV2 weights; see the open question below. |
+| torchvision ImageNet MobileNetV2 | BSD-3-Clause (torchvision) | Downloaded by torchvision at training time. The learning block fine-tunes from these weights; they are never redistributed here. |
 
 ## Worth reading before you build on this
 
-### 1. Piper is GPL-3.0-or-later
+### The Qualcomm SDK is proprietary, and it is baked into the Docker image
 
-It links espeak-ng for phonemization, which is why the license is copyleft.
+`blocks/learning-image-classifier/Dockerfile` triggers ExecuTorch's download of
+the Qualcomm AI Runtime SDK during `docker build`, because custom blocks have
+no network access while they run. That SDK is fetched under Qualcomm's own
+license, by ExecuTorch, onto your machine.
 
-This repository keeps it at arm's length rather than linking it:
+This matters if you publish the built image: an image built from this
+Dockerfile **contains** the Qualcomm SDK, even though this repository does not.
+The repository is clean; a built image is not necessarily. Check Qualcomm's
+terms before pushing one to a public registry.
 
-- Piper runs as **its own process**, started by `start.sh`, behind its HTTP API.
-- `app/speech.py` only ever POSTs to `127.0.0.1:5000` and parses the WAV that
-  comes back. **No file in this repository imports Piper.**
-- Its dependency lives in a separate
-  [`requirements-speech.txt`](demo/rps-amazing-hand/requirements-speech.txt),
-  not in `requirements.txt`, and `SKIP_SPEECH=1 ./install.sh` omits it.
-- The same arrangement is used for llama.cpp, which is MIT and needs no such
-  care — the structure was chosen for both reasons.
+### Models you train carry their data's provenance
 
-Process isolation is also the faster option here — a per-clip CLI invocation
-would reload the voice model every time — so nothing was traded away to get
-this separation.
+The blocks produce `.pte` files from your Studio project's data. A trained
+model is a derivative of its training data, so whatever consent and licensing
+position applies to your images applies to the model you publish. This
+repository ships no trained model and takes no position on yours.
 
-If you redistribute this project, satisfy yourself that the arrangement meets
-your own requirements. `SKIP_SPEECH=1 ./install.sh` omits Piper entirely; the
-demo then runs silently and nothing else changes.
+### This repository ships no third-party files
 
-### 2. Llama 3.2 
+Worth stating plainly, because it is unusual and it simplifies redistribution:
+there are no fonts, no model weights, no vendored source, no compiled
+libraries. The only binary files are four documentation screenshots and three
+patch files, all authored by this project and itemized in
+[docs/binary-provenance.md](docs/binary-provenance.md).
 
-llama.cpp (the engine) is MIT. The **weights** are under Meta's Llama 3.2
-Community License, which is a source-available community license.
-
-This repository never redistributes the weights; `scripts/fetch-llm-model.sh`
-downloads them from Hugging Face at install time.
-
-
-## Training data
-
-The gesture model is trained on images collected for this project. Their
-provenance, the consent position, and the rules for collecting more are in
-[docs/dataset.md](docs/dataset.md).
-
-`RPS_SAVE_FRAMES` makes the running demo write camera frames to disk. It is off
-by default. If you turn it on in front of other people, read that page first.
+A separate repository, **demo-executorch-qnn**, holds applications built on
+these artifacts. That one *does* redistribute third-party files (web fonts) and
+uses GPL and source-available components at runtime. Its own notices cover
+them; none of it applies here.

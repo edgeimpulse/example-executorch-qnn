@@ -8,8 +8,8 @@
 # demo the sidecar without an IQ-9075. (On the board, use board/setup.sh.)
 #
 #   ./tools/build_npu_server_cpu.sh                # needs: python with executorch==1.5.1, cmake >= 3.28, g++
-#   build-npu-cpu/npu_server --model demo/rps-amazing-hand/models/model.pte --selftest
-#   build-npu-cpu/npu_server --model demo/rps-amazing-hand/models/model.pte --socket /tmp/rps-npu.sock
+#   build-npu-cpu/npu_server --model model.pte --selftest
+#   build-npu-cpu/npu_server --model model.pte --socket /tmp/rps-npu.sock
 #
 # Linux only (the wheel's shared libraries are ELF). The INFO reply still says
 # "qnn-htp" because that string is hard-coded in the server.

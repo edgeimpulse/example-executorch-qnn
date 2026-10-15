@@ -131,7 +131,7 @@ Each entry gives what was chosen, why, the trade-offs, and the alternatives that
 
 - **Pros:**
   - The Python app never loads QNN or needs its library paths.
-  - It is isolated from llama.cpp's environment.
+  - It is isolated from whatever environment the calling application needs, including other accelerator clients sharing the same cDSP.
   - The model is loaded and warmed up once.
   - systemd gates the service on a real NPU self-test and restarts it if it dies.
   - Any language can call it with 12-byte headers.
@@ -147,34 +147,6 @@ Each entry gives what was chosen, why, the trade-offs, and the alternatives that
 
 **Why.** The NPU service dying mid-round must not stop the game. `HybridClassifier` answers that frame from the CPU and retries the NPU every 5 s. The CPU model is loaded at startup, because loading it at the first failure would stall at the worst moment. It also anchors the label-count check.
 
-### 14. Classification with confidence gates, not object detection, for the demo
-
-**Why.**
-- The classification block was solid: 92–97%.
-- The ExecuTorch FOMO detection block, after a rewrite on a pre-trained backbone, matched Studio's FOMO offline (about 63% F1) but got only 4 of 15 right in a live trial on the board.
-- YOLO via Ultralytics was ruled out (AGPL license).
-
-
-- **Cost:**
-  - A classifier has no "is there a hand?" signal, so empty frames still get a class. The gates (smoothing, confidence, margin, maximum `unknown`) handle this, and a clean, varied `unknown` class is the real fix.
-
-
-### 15. The LLM on the NPU through llama.cpp's Hexagon backend (Q4_0)
-
-**Why.** Qualcomm toolchain image cross-compiles llama.cpp with `GGML_HEXAGON`, and Q4_0 is the format the HTP kernels are built for.
-
-**Measured on the IQ-9075 (Llama 3.2 1B Q4_0):**
-
-| | NPU | CPU | |
-|---|---|---|---|
-| Prompt processing | **1619 t/s** | 282 t/s | 5.7× faster on the NPU |
-| Token generation | 45 t/s | **57 t/s** | Up to 25% faster on the CPU |
-
-So the NPU is not used for speed here. It is used to keep the CPU free for the camera, MJPEG encoding and the fallback.
-
-- **Alternatives:** Ollama on the CPU (the fallback), OpenCL on the Adreno GPU.
-
-
-### 16. Two artifacts, two claims
+### 14. Two artifacts, two claims
 
 `model.pte` (XNNPACK) is portable: one file runs on any Arm or x86 CPU with ExecuTorch. `model_qnn.pte` contains a context binary for **one chipset and SDK range**. The honest claim is "one training run, two artifacts", not "the same file runs on the NPU and on a phone."

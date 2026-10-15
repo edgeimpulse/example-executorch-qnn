@@ -1,4 +1,0 @@
-Paper
-Rock
-Scissors
-unknown
