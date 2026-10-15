@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Offline tests for the learning block. No network, no Edge Impulse account,
 no Qualcomm hardware.
 

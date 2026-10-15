@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Code added to a public ExecuTorch block's train.py by the porting recipe.
 # Sections are separated by "# ---8<---" lines; porting/apply_port.py inserts them.
 # ---8<---

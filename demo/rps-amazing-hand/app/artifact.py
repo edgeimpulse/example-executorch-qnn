@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Facts about the ExecuTorch artifacts behind this demo, served at GET /artifact.
 
 The project's claim is "one training run, two artifacts": a portable CPU `.pte`

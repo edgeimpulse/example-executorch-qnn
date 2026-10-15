@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Build-time smoke test: lower a tiny conv net to QNN HTP.
 
 Run from the Dockerfile so a broken QNN setup (missing libs, wrong

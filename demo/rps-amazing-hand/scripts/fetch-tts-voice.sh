@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Download a Piper voice into models/piper/ for spoken commentary.
 #
 #   ./scripts/fetch-tts-voice.sh                      # the default voice

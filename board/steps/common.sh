@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Shared settings for the board scripts. Sourced, not run.
 # Every value can be overridden from the environment.
 WORK=${WORK:-$HOME/et-qnn}          # ExecuTorch source + build tree

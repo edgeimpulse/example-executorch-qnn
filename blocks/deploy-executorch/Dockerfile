@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # ExecuTorch deployment block.
 # python:3.11-slim keeps the image small. ExecuTorch wheels are large; if the
 # build times out, pre-bake dependencies into a custom base image.

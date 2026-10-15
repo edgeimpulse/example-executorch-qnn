@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Install what the board needs. Idempotent: anything already present is skipped.
 #   steps/prereqs.sh runtime   QNN runtime only (libqnn1)          -- for install-prebuilt.sh
 #   steps/prereqs.sh build     runtime + headers + build tools     -- for setup.sh

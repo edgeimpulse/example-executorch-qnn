@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # One command from a fresh IQ-9075 (Ubuntu 24.04) to a model running on the NPU as a service.
 #
 #   ./setup.sh ~/npu-model/model_qnn.pte [~/npu-model/export_report.json]

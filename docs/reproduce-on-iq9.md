@@ -1,6 +1,6 @@
 # Reproduce it end to end
 
-This guide goes from an empty Studio project to the game running on the IQ‑9075 NPU.
+This guide goes from an empty Studio project to the game running on the IQ-9075 NPU.
 
 ## What you need
 
@@ -9,7 +9,7 @@ This guide goes from an empty Studio project to the game running on the IQ‑907
 | An Edge Impulse account (a free developer profile is enough for the learning block) | Training |
 | An Edge Impulse **Enterprise** org | The deployment block. Optional: you can run the learning block locally instead. |
 | An x86_64 machine with Docker (Linux, or a Mac with Rosetta enabled in Docker Desktop) | Building and testing the blocks, and cross-compiling llama.cpp |
-| A Qualcomm Dragonwing **IQ‑9075 EVK** with Ubuntu 24.04, network access, a monitor or SSH | The NPU |
+| A Qualcomm Dragonwing **IQ-9075 EVK** with Ubuntu 24.04, network access, a monitor or SSH | The NPU |
 | A USB webcam (V4L2, e.g. Logitech C920) | The demo |
 | *Optional:* a Pollen Robotics [Amazing Hand](https://github.com/pollen-robotics/AmazingHand) (8× Feetech SCS0009, serial bus adapter on `/dev/ttyACM0`) | The robot opponent |
 | *Optional:* a speaker plus a TTS container | Spoken commentary  |
@@ -101,7 +101,7 @@ cd ~/edge-impulse-executorch-qnn/board
 
 `setup.sh` installs the prerequisites, builds ExecuTorch v1.5.1 with QNN natively, builds `npu_server`, self-tests the model on the NPU and installs the `rps-npu` service. `verify.sh` then runs one inference, the whole test split on the NPU, and the test split through the service. The NPU accuracy should equal `accuracy.int8_fake_quant` in the report. That was 0.9744 in our run.
 
-**No build:** if you have a runtime package from `./package.sh` on another IQ‑9075 with the same OS, run `./install-prebuilt.sh <package.tar.gz> ~/npu-model/model_qnn.pte ~/npu-model/export_report.json` instead of `setup.sh`.
+**No build:** if you have a runtime package from `./package.sh` on another IQ-9075 with the same OS, run `./install-prebuilt.sh <package.tar.gz> ~/npu-model/model_qnn.pte ~/npu-model/export_report.json` instead of `setup.sh`.
 
 ## 5. Run the demo
 

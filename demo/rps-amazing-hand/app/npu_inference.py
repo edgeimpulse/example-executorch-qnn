@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """NPU-first inference with automatic CPU fallback, for the RPS app.
 
     from npu_inference import HybridClassifier

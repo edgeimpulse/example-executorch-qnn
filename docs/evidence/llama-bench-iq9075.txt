@@ -1,8 +1,10 @@
 cd pkg-linux
 LD_LIBRARY_PATH=./lib ADSP_LIBRARY_PATH=./lib \
   ./bin/llama-bench -m ../models/Llama-3.2-1B-Instruct-Q4_0.gguf --device HTP0 -ngl 99
+
 LD_LIBRARY_PATH=./lib ADSP_LIBRARY_PATH=./lib \
   ./bin/llama-bench -m ../models/Llama-3.2-1B-Instruct-Q4_0.gguf -ngl 0
+
 ggml-hex: Loading driver libcdsprpc.so
 ggml-hex: FASTRPC_GET_DOMAINS query failed (0x6c), using static CDSP domains
 ggml-hex: Hexagon backend (experimental) : allocating new registry : ndev 1

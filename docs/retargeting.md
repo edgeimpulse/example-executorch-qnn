@@ -1,4 +1,4 @@
-# Retargeting: other chips besides the IQ‑9075
+# Retargeting: other chips besides the IQ-9075
 
 The NPU export can be pointed at any chip that ExecuTorch has a **backend** for. A backend is the vendor plug-in that compiles part of a model for that chip and runs it there. How much work that takes depends on how far the target is from what was built here:
 
@@ -9,7 +9,7 @@ The NPU export can be pointed at any chip that ExecuTorch has a **backend** for.
 | A microcontroller NPU | Arm Ethos-U, NXP MCX / i.MX RT | The export is similar; the device side is bare metal |
 | No ExecuTorch backend | Anything else | — |
 
-This page is a **map, not a tutorial**. Only the IQ‑9075 path is verified end to end. The vendor-specific setup lives in [ExecuTorch's backend docs](https://docs.pytorch.org/executorch/stable/backends-overview.html), and those change with each release. For the background on why the design looks the way it does, see [design-decisions.md](design-decisions.md).
+This page is a **map, not a tutorial**. Only the IQ-9075 path is verified end to end. The vendor-specific setup lives in [ExecuTorch's backend docs](https://docs.pytorch.org/executorch/stable/backends-overview.html), and those change with each release. For the background on why the design looks the way it does, see [design-decisions.md](design-decisions.md).
 
 ## What is Qualcomm-specific, and what is not
 
@@ -44,7 +44,7 @@ Either way, the export code per target is the same; only where it runs changes.
 
 | `--soc-model` | Hexagon (HTP) | Typical products |
 |---|---|---|
-| `QCS9100` | v73 | Dragonwing IQ‑9075 / QCS9075 class (**the verified target**) |
+| `QCS9100` | v73 | Dragonwing IQ-9075 / QCS9075 class (**the verified target**) |
 | `SA8255` | v73 | Automotive (same v73 family) |
 | `QCM6490` | v68 | Dragonwing QCS6490 class (e.g. RB3 Gen 2) |
 | `SM8550` | v73 | Snapdragon 8 Gen 2 phones |
@@ -55,13 +55,13 @@ Either way, the export code per target is the same; only where it runs changes.
 
 The rest of the enum covers XR, wearable and automotive parts (`SXR*`, `SSG*`, `SW6100`, `SAR2230P`, `SA8295`, `SA8797`, `SM8350`, `SM8450`, `SM8475`). Check the file in your ExecuTorch version, because the list grows with each release.
 
-**If your chip is not listed:** the IQ‑9075 isn't either. Pick the entry from the same silicon family, or at least the same Hexagon version and VTCM size, then confirm on the device. That is how `QCS9100` was chosen and verified here.
+**If your chip is not listed:** the IQ-9075 isn't either. Pick the entry from the same silicon family, or at least the same Hexagon version and VTCM size, then confirm on the device. That is how `QCS9100` was chosen and verified here.
 
 **Chips without an HTP get the CPU path.** The Arduino UNO Q (QRB2210), for example, has no HTP entry, so it runs the portable `model.pte`.
 
 **What differs on the device:**
 
-- **Linux boards (Dragonwing).** Repeat the native build in [board/](../board/README.md) with that board's QNN packages. Point `ADSP_LIBRARY_PATH` at the folder that holds that board's `libQnnHtpV<NN>Skel.so`; the IQ‑9075's `sa8775p` folder is only the default. All the board scripts honour the variable. Everything else is unchanged.
+- **Linux boards (Dragonwing).** Repeat the native build in [board/](../board/README.md) with that board's QNN packages. Point `ADSP_LIBRARY_PATH` at the folder that holds that board's `libQnnHtpV<NN>Skel.so`. The IQ-9075's `sa8775p` folder is only the default. The board scripts honour the variable and the rest of the flow stays the same.
 - **Android phones.** Use ExecuTorch's Android library (AAR) with the Qualcomm backend instead of the board build.
     - Prebuilt QNN AARs have been published for some releases. Otherwise build one with ExecuTorch's `scripts/build_android_library.sh` and `QNN_SDK_ROOT` set ([Android guide](https://docs.pytorch.org/executorch/stable/using-executorch-android.html)).
     - The AAR must be the **same ExecuTorch version** that exported the `.pte`.
@@ -70,14 +70,16 @@ The rest of the enum covers XR, wearable and automotive parts (`SXR*`, `SSG*`, `
 
 ## Other NPUs
 
-Every backend in ExecuTorch 1.5.1 follows the same pattern as Qualcomm's: a **quantizer** that sets up int8 (or the formats the chip wants), a **partitioner** that picks the parts of the graph the chip can run, and a **compile spec** that names the chip. A sibling of `qnn_export.py` keeps the same steps and swaps the vendor pieces:
+Every backend in ExecuTorch 1.5.1 follows the same pattern as Qualcomm.
+A **quantizer** sets up int8, a **partitioner** picks the graph pieces the chip can run, and a **compile spec** names the chip.
+A sibling of `qnn_export.py` keeps the same steps and swaps the vendor pieces:
 
 | Step in `export_qnn()` | Qualcomm (here) | Other |
 |---|---|---|
 | Quantize (PT2E) | `QnnQuantizer` | MediaTek `NeuropilotQuantizer`, Samsung `EnnQuantizer`, NXP `NeutronQuantizer`, Intel `OpenVINOQuantizer`, Arm `EthosUQuantizer`, Apple `CoreMLQuantizer` |
 | Lower | `to_edge_transform_and_lower_to_qnn` with the HTP compile spec | `to_edge_transform_and_lower(..., partitioner=[<Vendor>Partitioner(compile_spec)])`, e.g. `NeuropilotPartitioner`, `EnnPartitioner`, `NeutronPartitioner`, `OpenvinoPartitioner`, `EthosUPartitioner` |
 | Delegation check | `QnnBackend` in the graph | That vendor's backend id (check with `tools/inspect_pte.py`) |
-| SDK at build time | QNN SDK built into the image | The vendor's compiler and SDK. Often a registration download or licence terms; sometimes x86-only. |
+| SDK at build time | QNN SDK built into the image | The vendor's compiler and SDK. Often a registration download or license terms; sometimes x86-only. |
 | Everything else | Platform guard, never raise, float vs int8 report, smoke test | Unchanged |
 
 The class names above exist in ExecuTorch 1.5.1. Their exact arguments and options are in each backend's docs, and none of these paths were run in this project.
@@ -100,10 +102,10 @@ The server source, the socket protocol and the demo's CPU fallback stay as they 
 **The export looks similar.** For Arm Ethos-U, for example, the pair is `EthosUQuantizer` plus `EthosUPartitioner`, with Arm's Vela compiler. Everything after the export changes:
 
 - **No Linux.** No sidecar process, socket or Python app. The model runs in a bare-metal C++ runner compiled into the firmware.
-- **Memory.** Kilobytes to a few megabytes. MobileNetV2 at this size likely won't fit; the block's `--no-pretrained` small CNN, a smaller input, or a slimmer backbone would.
+- **Memory.** Kilobytes to a few megabytes. MobileNetV2 at this size likely won't fit; the block's `--no-pre-trained` small CNN, a smaller input, or a slimmer backbone would.
 - **Formats.** Typically int8-only, with stricter op support.
 
-That is closer to the MCU direction in the [ExecuTorch blog post](https://www.edgeimpulse.com/blog/from-pytorch-to-the-edge-getting-started-with-executorch-and-edge-impulse/) than to the IQ‑9075 setup.
+That is closer to the MCU direction in the [ExecuTorch blog post](https://www.edgeimpulse.com/blog/from-pytorch-to-the-edge-getting-started-with-executorch-and-edge-impulse/) than to the IQ-9075 setup.
 
 ## Hardware without a backend
 
@@ -112,7 +114,7 @@ That is closer to the MCU direction in the [ExecuTorch blog post](https://www.ed
 
 ## For any new target: what to check
 
-The same evidence used for the IQ‑9075 works anywhere:
+The same evidence used for the IQ-9075 works anywhere:
 
 1. **The export report:** `status: ok`, the float32 vs int8 delta, and `delegation.non_delegated_ops` (empty or small).
 2. **`tools/inspect_pte.py`:** the expected backend appears in `delegates`.

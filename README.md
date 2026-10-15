@@ -1,22 +1,22 @@
 # PyTorch to ExecuTorch with Edge Impulse
 
-Train a PyTorch model in [**Edge Impulse Studio**](https://www.edgeimpulse.com/product) with a custom learning block, and get **ExecuTorch programs** from that single training run:
+Use a custom learning block in [**Edge Impulse Studio**](https://www.edgeimpulse.com/product) to train a PyTorch model, then export a portable ExecuTorch program and, with one extra flag, an NPU build for the IQ-9075.
 
 | Artifact | Runs on | How it is made |
 |---|---|---|
-| `model.pte` | **Any Arm or x86 CPU** with the ExecuTorch runtime: Linux boards and laptops, Android phones, and more. The same file runs on a Qualcomm IQ‑9075 board, an x86 Linux machine and a Samsung Galaxy S26. | `torch.export`, then the XNNPACK partitioner |
-| `model_qnn.pte` | **The Hexagon NPU** on a Qualcomm Dragonwing IQ‑9075, when you want hardware acceleration | PT2E int8 quantization with `QnnQuantizer`, then lowering through the QNN backend for `QCS9100` (Hexagon v73) |
+| `model.pte` | **Any Arm or x86 CPU** with the ExecuTorch runtime: Linux boards and laptops, Android phones, and more. The same file runs on a Qualcomm IQ-9075 board, an x86 Linux machine, and a Samsung Galaxy S26. | `torch.export`, then the XNNPACK partitioner |
+| `model_qnn.pte` | **The Hexagon NPU** on a Qualcomm Dragonwing IQ-9075, when you want hardware acceleration | PT2E int8 quantization with `QnnQuantizer`, then lowering through the QNN backend for `QCS9100` (Hexagon v73) |
 
-The examples use a rock‑paper‑scissors model: a web game on Linux (on the IQ‑9075 it uses the NPU and can add a robotic Amazing Hand and LLM commentary), and an Android app that runs the same `model.pte` on a phone.
+The examples use a rock-paper-scissors model: a web game on Linux, with the option to run it on the IQ-9075 NPU and add an Amazing Hand and LLM commentary, and an Android app that runs the same `model.pte` on a phone.
 
 What this shows:
-1. A PyTorch developer gets a **portable ExecuTorch program** out of Edge Impulse Studio. The same file runs unchanged on a Linux board and on an Android phone.
-2. With **one extra flag**, the same training run also produces a program for the **Qualcomm NPU**, and accuracy holds after int8 quantization (0.9744, equal to float32).
-3. On the IQ‑9075, vision inference runs on the NPU instead of the CPU, alongside an LLM using the same NPU.
+1. A PyTorch developer can get a **portable ExecuTorch program** from Edge Impulse Studio. The same file runs unchanged on a Linux board and on an Android phone.
+2. With **one extra flag**, the same training run also produces a program for the **Qualcomm NPU**, and accuracy stays the same after int8 quantization (0.9744, equal to float32).
+3. On the IQ-9075, vision inference runs on the NPU instead of the CPU, while an LLM uses the same NPU.
 
-**No IQ‑9075?** Everything in the CPU path works without one, and pretrained models are on the [Releases](../../releases) page. **A different NPU?** [docs/retargeting.md](docs/retargeting.md) maps what changes for other chips and NPUs.
+**No IQ-9075?** The CPU path works without one, and the pre-trained models are on the [Releases](../../releases) page. **A different NPU?** [docs/retargeting.md](docs/retargeting.md) shows what changes for other chips and NPUs.
 
-> **Context.** The Edge Impulse blog post [From PyTorch to the Edge](https://www.edgeimpulse.com/blog/from-pytorch-to-the-edge-getting-started-with-executorch-and-edge-impulse/) (Sep 2026) introduced the ExecuTorch blocks on the CPU path and listed NPU acceleration as future work. This repository is a next step: the same learning block, with one extra flag, now also produces an NPU program. The model runs on the IQ‑9075 NPU with no accuracy loss compared with float32.
+> **Context.** The Edge Impulse blog post [From PyTorch to the Edge](https://www.edgeimpulse.com/blog/from-pytorch-to-the-edge-getting-started-with-executorch-and-edge-impulse/) (September 2026) introduced the ExecuTorch blocks on the CPU path and listed NPU acceleration as future work. This repository is the next step: the same learning block, with one extra flag, also produces an NPU program. The model runs on the IQ-9075 NPU with no accuracy loss compared with float32.
 
 ## Contents
 
@@ -42,7 +42,7 @@ What this shows:
 
 ### Any computer or phone
 
-**1. Run the pretrained model on a photo** (about 5 minutes; Python 3.10–3.13).
+**1. Run the pre-trained model on a photo** (about 5 minutes; Python 3.10–3.13).
 
 ```bash
 git clone <repo-url> && cd edge-impulse-executorch-qnn
@@ -58,7 +58,7 @@ python tools/classify_image.py model.pte labels.txt my_hand.jpg
 
 Take a photo of your hand making rock, paper or scissors. The script prints the class scores and the time for one inference on your CPU.
 
-**2. Run the same file on an Android phone.** Copy `model.pte` and `labels.txt` into `demo/rps-android/app/src/main/assets/`, open `demo/rps-android` in Android Studio, and press Run with your phone plugged in. The app plays rock‑paper‑scissors with the phone's camera and shows the model's hash, so you can see it is the same file. Details: [demo/rps-android/README.md](demo/rps-android/README.md).
+**2. Run the same file on an Android phone.** Copy `model.pte` and `labels.txt` into `demo/rps-android/app/src/main/assets/`, open `demo/rps-android` in Android Studio, and press Run with your phone plugged in. The app plays rock-paper-scissors with the phone's camera and shows the model's hash, so you can see it is the same file. Details: [demo/rps-android/README.md](demo/rps-android/README.md).
 
 **3. Play the web game on a Linux laptop with a webcam.**
 
@@ -83,7 +83,7 @@ ls /tmp/ei-out                  # model.onnx  model.pte  model_qnn.pte  export_r
 
 ### Qualcomm IQ-9075: the NPU
 
-You need an IQ‑9075 EVK on Ubuntu 24.04 with SSH and `sudo`.
+You need an IQ-9075 EVK on Ubuntu 24.04 with SSH and `sudo`.
 
 **1. Get the NPU model onto the board.** Use `model_qnn.pte` and `export_report.json` from the [Releases](../../releases) page, or from your own training run.
 
@@ -118,7 +118,7 @@ You don't need everything below. Pick a path in the next section, then check its
 
 ### What it helps to know
 
-- **Edge Impulse Studio basics:** creating a project, uploading and labelling images, building an impulse (input → processing block → learning block), training, and the **Deployment** page. The [Edge Impulse docs](https://docs.edgeimpulse.com/) cover these.
+- **Edge Impulse Studio basics:** creating a project, uploading and labeling images, building an impulse (input → processing block → learning block), training, and the **Deployment** page. The [custom learning block docs](https://docs.edgeimpulse.com/studio/organizations/custom-blocks/custom-learning-blocks) cover these.
 - **What a custom block is:** a Docker image that Studio runs for you, with its settings in `parameters.json`. See [custom learning blocks](https://docs.edgeimpulse.com/studio/organizations/custom-blocks/custom-learning-blocks) and [custom deployment blocks](https://docs.edgeimpulse.com/studio/organizations/custom-blocks/custom-deployment-blocks).
 - **A Linux terminal.** For the board, also SSH and `sudo`.
 - **PyTorch** helps when reading the block code.
@@ -129,9 +129,9 @@ You don't need everything below. Pick a path in the next section, then check its
 | Path | You need |
 |---|---|
 | **A. No hardware** | <ul><li>Linux or macOS (on Windows, use WSL2), with `git` and Python 3.10–3.13.</li><li>About 3 GB of disk for the Python environment (torch and ExecuTorch).</li><li>For the Docker build only: Docker on an x86_64 machine, internet access, and about 10 GB free for the image. Apple Silicon works under emulation, but slowly.</li></ul> |
-| **B. Edge Impulse Studio** | <ul><li>An [Edge Impulse account](https://studio.edgeimpulse.com/signup). A free developer profile can push and use the learning block.</li><li>The Edge Impulse CLI: `npm install -g edge-impulse-cli`, which needs Node.js 16 or later (22 recommended).</li><li>An image classification project with labelled images. The example used four classes: Rock, Paper, Scissors and unknown.</li><li>Docker, to run the block locally with `edge-impulse-blocks runner`.</li><li>For `deploy.zip` from Studio: an **Enterprise** organization that owns the project. Without one, run the learning block locally instead.</li><li>More information can be found on the [Edge Impulse Docs](https://docs.edgeimpulse.com/)</li></ul> |
-| **C. IQ‑9075 EVK** | <ul><li>A Qualcomm Dragonwing IQ‑9075 EVK with Ubuntu 24.04, on the network and reachable over SSH, with a user that has `sudo`.</li><li>Internet access on the board, and about 10 GB free in `$HOME` for the build. Neither is needed with `install-prebuilt.sh`.</li><li>`model_qnn.pte` and `export_report.json`, from the Releases page or path B, plus the test split (`X_split_test.npy`, `Y_split_test.npy`) for the full accuracy check.</li><li>No Qualcomm account and no SDK download: the board uses Ubuntu's Qualcomm packages, and the scripts install them.</li></ul> |
-| **D. The demos** | <ul><li>**Android app:** Android Studio (Ladybug or newer) and an Android phone (arm64, Android 8.0 or newer) with USB debugging on.</li><li>**Web game:** a Linux machine with a USB webcam (a V4L2 device such as `/dev/video0`) and Python 3.10 or later. A CPU model is included.</li><li>Optional, for the NPU: the EVK with the `rps-npu` service from path C.</li><li>Optional, for the hand: an [Amazing Hand](https://github.com/pollen-robotics/AmazingHand) on a USB serial port, with your user in the `dialout` group.</li><li>Optional, for LLM commentary: an x86_64 machine with Docker to cross-compile llama.cpp for Hexagon, and about 0.8 GB for the GGUF model. The Llama model may need you to accept its licence on Hugging Face.</li></ul> |
+| **B. Edge Impulse Studio** | <ul><li>An [Edge Impulse account](https://studio.edgeimpulse.com/signup). A free developer profile can push and use the learning block.</li><li>The Edge Impulse CLI: `npm install -g edge-impulse-cli`, which needs Node.js 16 or later (22 recommended).</li><li>An image classification project with labeled images. The example used four classes: Rock, Paper, Scissors and unknown.</li><li>Docker, to run the block locally with `edge-impulse-blocks runner`.</li><li>For `deploy.zip` from Studio: an **Enterprise** organization that owns the project. Without one, run the learning block locally instead.</li><li>More information can be found in the [Edge Impulse Studio docs](https://docs.edgeimpulse.com/studio/)</li></ul> |
+| **C. IQ-9075 EVK** | <ul><li>A Qualcomm Dragonwing IQ-9075 EVK with Ubuntu 24.04, on the network and reachable over SSH, with a user that has `sudo`.</li><li>Internet access on the board, and about 10 GB free in `$HOME` for the build. Neither is needed with `install-prebuilt.sh`.</li><li>`model_qnn.pte` and `export_report.json`, from the Releases page or path B, plus the test split (`X_split_test.npy`, `Y_split_test.npy`) for the full accuracy check.</li><li>No Qualcomm account and no SDK download: the board uses Ubuntu's Qualcomm packages, and the scripts install them.</li></ul> |
+| **D. The demos** | <ul><li>**Android app:** Android Studio (Ladybug or newer) and an Android phone (arm64, Android 8.0 or newer) with USB debugging on.</li><li>**Web game:** a Linux machine with a USB webcam (a V4L2 device such as `/dev/video0`) and Python 3.10 or later. A CPU model is included.</li><li>Optional, for the NPU: the EVK with the `rps-npu` service from path C.</li><li>Optional, for the hand: an [Amazing Hand](https://github.com/pollen-robotics/AmazingHand) on a USB serial port, with your user in the `dialout` group.</li><li>Optional, for LLM commentary: an x86_64 machine with Docker to cross-compile llama.cpp for Hexagon, and about 0.8 GB for the GGUF model. The Llama model may need you to accept its license on Hugging Face.</li></ul> |
 | **E. Another block** | <ul><li>`git` and Python 3.</li><li>Then the same as paths A and B to train it, and path C to run it on the board.</li></ul> |
 
 ---
@@ -141,7 +141,7 @@ You don't need everything below. Pick a path in the next section, then check its
 ### A. No hardware: run and understand the CPU side
 
 ```bash
-# 1. Classify a photo with the pretrained model.pte (see the Quick start for the download)
+# 1. Classify a photo with the pre-trained model.pte (see the Quick start for the download)
 python tools/classify_image.py model.pte labels.txt my_hand.jpg
 
 # 2. Look inside a .pte to see which backend it was lowered to
@@ -229,9 +229,9 @@ Same flag, same report, same board runtime. See [docs/porting-to-other-blocks.md
 |---|---|---|
 | [`blocks/learning-image-classifier/`](blocks/learning-image-classifier/) | **Custom learning block**: PyTorch training, then ONNX, CPU `.pte` and QNN `.pte` | No, it runs anywhere Docker runs (x86_64) |
 | [`blocks/deploy-executorch/`](blocks/deploy-executorch/) | **Custom deployment block**: CPU int8 `.pte` plus QNN pass-through into `deploy.zip` | No (pushing it to Studio needs an Enterprise org) |
-| [`demo/rps-android/`](demo/rps-android/) | Android app: rock‑paper‑scissors with the phone's camera, running `model.pte` on the phone's CPU | An Android phone (arm64, Android 8.0+) |
-| [`demo/rps-amazing-hand/`](demo/rps-amazing-hand/) | Rock‑paper‑scissors web app: NPU-first inference with CPU fallback, optional Amazing Hand, LLM commentary and local text to speech ([how those work](docs/speech-and-actuation.md)) | Any Linux machine with a webcam; the NPU path needs the EVK |
-| [`board/`](board/) | `setup.sh` builds ExecuTorch + QNN on the board and installs the model as the `rps-npu` service; `verify.sh` proves it runs on the NPU; `package.sh` / `install-prebuilt.sh` let other boards skip the build. Also the `npu_server` C++ source. | IQ‑9075 EVK |
+| [`demo/rps-android/`](demo/rps-android/) | Android app: rock-paper-scissors with the phone's camera, running `model.pte` on the phone's CPU | An Android phone (arm64, Android 8.0+) |
+| [`demo/rps-amazing-hand/`](demo/rps-amazing-hand/) | Rock-paper-scissors web app: NPU-first inference with CPU fallback, optional Amazing Hand, LLM commentary and local text to speech ([how those work](docs/speech-and-actuation.md)) | Any Linux machine with a webcam; the NPU path needs the EVK |
+| [`board/`](board/) | `setup.sh` builds ExecuTorch + QNN on the board and installs the model as the `rps-npu` service; `verify.sh` proves it runs on the NPU; `package.sh` / `install-prebuilt.sh` let other boards skip the build. Also the `npu_server` C++ source. | IQ-9075 EVK |
 | [`porting/`](porting/) | `apply_port.py` + kit + patches that add the same NPU export to Edge Impulse's public **timeseries, KWS and FOMO** ExecuTorch blocks ([guide](docs/porting-to-other-blocks.md)) | No |
 | [`tools/`](tools/) | Classify a photo with any image `model.pte`, inspect a `.pte` (which backends are inside it), evaluate one on Studio's test split, and generate fake data for a local block run | No |
 | [`docs/`](docs/) | How it works, design decisions, step-by-step reproduction, porting to other blocks, retargeting to other chips, speech and actuation, the dataset, results, versions, troubleshooting, roadmap | No |
@@ -266,7 +266,7 @@ flowchart LR
    - it builds a CPU int8 `model.pte` from Studio's ONNX export
    - it copies `model_qnn.pte` and `export_report.json` through unchanged
 3. **Anywhere with a CPU.** `model.pte` runs with the standard ExecuTorch runtime: the pip package on Linux, or the Android library in the phone app. Nothing is rebuilt per device.
-4. **The IQ‑9075 NPU.** The aarch64 pip wheel of ExecuTorch has no QNN backend, so the board builds ExecuTorch 1.5.1 with QNN from source. A small C++ server keeps the NPU model loaded and serves inferences over a UNIX socket.
+4. **The IQ-9075 NPU.** The aarch64 pip wheel of ExecuTorch has no QNN backend, so the board builds ExecuTorch 1.5.1 with QNN from source. A small C++ server keeps the NPU model loaded and serves inferences over a UNIX socket.
 5. **The demos.** The web game sends each camera frame to the NPU server, and falls back to the CPU `model.pte` for any frame the server can't answer. The Android app runs `model.pte` directly on the phone.
 
 [docs/how-it-works.md](docs/how-it-works.md) walks through each step in detail. The reasoning behind the main choices, with the alternatives considered, is in [docs/design-decisions.md](docs/design-decisions.md).
@@ -277,20 +277,20 @@ flowchart LR
 
 All numbers come from **one training run**: MobileNetV2 fine-tuned on a 4-class rock/paper/scissors/unknown dataset at 96×96, scored on the same 78 test images. These are the models on the [Releases](../../releases) page.
 
-| | float32 (reference) | `model.pte` (CPU, int8, XNNPACK) | **`model_qnn.pte` (IQ‑9075 NPU, int8 8a8w)** |
+| | float32 (reference) | `model.pte` (CPU, int8, XNNPACK) | **`model_qnn.pte` (IQ-9075 NPU, int8 8a8w)** |
 |---|---|---|---|
-| Accuracy (78 held‑out images) | 0.9744 | 0.9487 | **0.9744** |
+| Accuracy (78 held-out images) | 0.9744 | 0.9487 | **0.9744** |
 | File size | 8.9 MB | 2.4 MB | 2.6 MB |
 
 **Where `model.pte` has run, and how fast** (one inference):
 
 | Device | Runtime | Latency |
 |---|---|---|
-| Qualcomm IQ‑9075, Kryo CPU | ExecuTorch Python | ~0.4–1.4 ms¹ |
+| Qualcomm IQ-9075, Kryo CPU | ExecuTorch Python | ~0.4–1.4 ms¹ |
 | x86_64 Linux | ExecuTorch 1.5.1 Python | ~1 ms |
 | Samsung Galaxy S26, CPU | ExecuTorch Android | *to be measured* |
 
-**`model_qnn.pte` on the IQ‑9075 NPU:** 0.23 ms per inference on the NPU, 0.70 ms round trip from Python.
+**`model_qnn.pte` on the IQ-9075 NPU:** 0.23 ms per inference on the NPU, 0.70 ms round trip from Python.
 
 ¹ From an earlier 96×96 export on the board's Kryo cores. The CPU model shipped in `demo/rps-amazing-hand/models/` is a different, older 160×160 export.
 
@@ -306,19 +306,43 @@ The full numbers, and where each one came from, are in [docs/results.md](docs/re
 | ExecuTorch for the CPU `model.pte` | Built with **1.3.1** by the deployment block. Runs on 1.3.1 (Android app, web game) and on 1.5.1 (Python, checked). |
 | QNN SDK the NPU model is compiled with | 2.37.0.250724 (pinned by ExecuTorch 1.5.1) |
 | QNN runtime on the board | apt `libqnn1` 2.46.0. An older compile on a newer runtime works; the reverse does not. |
-| Compile target | `QcomChipset.QCS9100` (Hexagon v73). The IQ‑9075 is not listed by name. |
+| Compile target | `QcomChipset.QCS9100` (Hexagon v73). The IQ-9075 is not listed by name. |
 
 Rules and the full matrix are in [docs/versions.md](docs/versions.md).
 
 ## License and credits
 
 This project is licensed under **The Clear BSD License** — see
-[LICENSE](LICENSE). 
+[LICENSE](LICENSE). Every source file owned by this project carries a
+copyright line and the SPDX identifier `BSD-3-Clause-Clear` in its header.
 
 It does **not** cover bundled third-party files, which keep their own terms:
 the web fonts under `demo/rps-amazing-hand/app/static/fonts/` are SIL OFL 1.1,
-with their licence text alongside them.
+with their license text alongside them.
 
+### What is shipped and what is fetched
+
+This matters if you redistribute this project or build on it.
+
+**Shipped in this repository:** this project's own source, the trained
+`model.pte`, the documentation screenshots, the synthetic Android test
+fixtures, the porting patches, and the two web-font families with their OFL
+license text.
+
+**Not shipped — fetched from their own distributors at install time:**
+ExecuTorch and PyTorch, llama.cpp, the Llama 3.2 weights, Piper and its voice,
+the Qualcomm QNN SDK, and the rest of the pip dependencies. Their
+redistribution terms are not triggered by this repository; they are triggered
+by anyone who bundles them with it.
+
+[NOTICE](NOTICE) is the authoritative record of that split, of every shipped
+artifact's origin, and of the attribution obligations attached to each.
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) covers the same ground with
+the reasoning behind each choice, and
+[docs/binary-provenance.md](docs/binary-provenance.md) maps every shipped
+binary and document file.
+
+### Credits
 
 - The ExecuTorch blocks build on Edge Impulse's public `executorch-pytorch-*-block` and `executorch-deploy` repositories.
 - The [Amazing Hand](https://github.com/pollen-robotics/AmazingHand) is by Pollen Robotics: Apache-2.0 for the software, CC BY 4.0 for the mechanical design.
@@ -328,7 +352,5 @@ Llama 3.2 1B Instruct, under the
 [Llama 3.2 Community License](https://www.llama.com/llama3_2/license/). The
 model is downloaded at install time and is not redistributed here.
 
-Third-party components and their licences are listed in
-[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md). The gesture dataset's
-provenance, and the rules for collecting more images, are in
-[docs/dataset.md](docs/dataset.md).
+The gesture dataset's provenance, and the rules for collecting more images,
+are in [docs/dataset.md](docs/dataset.md).

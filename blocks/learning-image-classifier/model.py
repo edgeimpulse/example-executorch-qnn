@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Model definitions for the PyTorch custom learning block.
 
 Two architectures are available:

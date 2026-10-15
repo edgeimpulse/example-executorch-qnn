@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Offline ONNX -> ExecuTorch (.pte) converter.
 
 Provided so users can reproduce the conversion the deployment block performs, or

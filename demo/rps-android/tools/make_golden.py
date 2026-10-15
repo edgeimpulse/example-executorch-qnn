@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """
 make_golden.py - write the golden vectors the Kotlin unit tests check against.
 

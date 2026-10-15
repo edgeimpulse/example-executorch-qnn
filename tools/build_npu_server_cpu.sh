@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Build board/npu_server/npu_server.cpp on a laptop against the ExecuTorch pip
 # wheel's C++ SDK, with the XNNPACK (CPU) backend instead of QNN. Same source,
 # same socket protocol -- it just runs a CPU .pte. Use it to read, debug or

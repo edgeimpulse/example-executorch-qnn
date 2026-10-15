@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Run the real test split through model_qnn.pte on the NPU and report accuracy.
 
 Works for any block's model: the input layout comes from export_report.json

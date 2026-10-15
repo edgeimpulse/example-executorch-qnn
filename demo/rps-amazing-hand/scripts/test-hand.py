@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Exercise the Amazing Hand on its own, outside the web app.
 
     .venv/bin/python scripts/test-hand.py                 all poses, with pauses

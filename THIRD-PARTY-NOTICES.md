@@ -1,6 +1,6 @@
-# Third-party components and licences
+# Third-party components and licenses
 
-The third-party components this project uses, and their licences.
+The third-party components this project uses, and their licenses.
 
 This project's own code is under The Clear BSD License ([LICENSE](LICENSE)).
 Everything below is somebody else's and keeps its own terms.
@@ -12,7 +12,7 @@ line between "we point at it" and "we ship it".
 
 ## Runtime and build dependencies
 
-| Component | Licence | Shipped here? |
+| Component | License | Shipped here? |
 |---|---|---|
 | ExecuTorch, PyTorch, torchvision | BSD-3-Clause | no — pip |
 | llama.cpp (commentary engine) | MIT | no — built by `scripts/build-llama-hexagon.sh` |
@@ -23,14 +23,14 @@ line between "we point at it" and "we ship it".
 | FastAPI, httpx, onnxruntime | MIT | no — pip |
 | uvicorn, numpy | BSD | no — pip |
 | `opencv-python` | Apache-2.0 | no — pip |
-| Atkinson Hyperlegible, Barlow (web fonts) | SIL OFL 1.1 | **yes** — `demo/rps-amazing-hand/app/static/fonts/`, with the per-family licence text alongside, as the OFL requires |
+| Atkinson Hyperlegible, Barlow (web fonts) | SIL OFL 1.1 | **yes** — `demo/rps-amazing-hand/app/static/fonts/`, with the per-family license text alongside, as the OFL requires |
 | Qualcomm QNN SDK / `libqnn1` | Qualcomm proprietary | no — Ubuntu IoT PPA |
 
 ## Models and data
 
-| Artifact | Licence | Notes |
+| Artifact | License | Notes |
 |---|---|---|
-| Llama 3.2 1B Instruct (GGUF) | **Llama 3.2 Community License** | Not an OSI open-source licence. Fetched by `scripts/fetch-llm-model.sh`; never redistributed here. See below. |
+| Llama 3.2 1B Instruct (GGUF) | **Llama 3.2 Community License** | Not an OSI open-source license. Fetched by `scripts/fetch-llm-model.sh`; never redistributed here. See below. |
 | Piper voice (`en_US-kristin-medium`) | public domain (LibriVox) | Fetched by `scripts/fetch-tts-voice.sh`. **The voice catalogue is mixed — see below.** |
 | `models/model.pte` (gesture classifier) | — | Trained in this project. Fine-tuned from torchvision's ImageNet MobileNetV2 weights; see the open question below. |
 
@@ -38,7 +38,7 @@ line between "we point at it" and "we ship it".
 
 ### 1. Piper is GPL-3.0-or-later
 
-It links espeak-ng for phonemization, which is why the licence is copyleft.
+It links espeak-ng for phonemization, which is why the license is copyleft.
 
 This repository keeps it at arm's length rather than linking it:
 
@@ -62,7 +62,7 @@ demo then runs silently and nothing else changes.
 ### 2. Llama 3.2 
 
 llama.cpp (the engine) is MIT. The **weights** are under Meta's Llama 3.2
-Community License, which is a source-available community licence.
+Community License, which is a source-available community license.
 
 This repository never redistributes the weights; `scripts/fetch-llm-model.sh`
 downloads them from Hugging Face at install time.

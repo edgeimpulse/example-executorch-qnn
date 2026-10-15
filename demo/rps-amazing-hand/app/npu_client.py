@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Client for the npu_server sidecar (QNN / Hexagon NPU inference).
 
     from npu_client import NpuClient

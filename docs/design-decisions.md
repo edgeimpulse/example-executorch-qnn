@@ -33,21 +33,21 @@ Each entry gives what was chosen, why, the trade-offs, and the alternatives that
 - **Cons:**
   - Every training run pays for the lowering (seconds to minutes).
   - The learning-block image carries the SDK (about 1.9 GB more).
-- **Alternative:** a QNN option in the deployment block. That would let the user choose the target at deploy time, which is closer to how Studio works. 
+- **Alternative:** a QNN option in the deployment block. That would let the user choose the target at deploy time, which is closer to how Studio works.
 
 ### 3. Fine-tune ImageNet MobileNetV2 instead of training a small CNN from scratch
 
-**Why.** The original `SmallCNN` (about 25K parameters, random initialisation) reached **47.5%** on a few hundred hand images. Studio's own transfer learning reached 87% on the same data. Fine-tuning MobileNetV2 brought the block to 88–97%.
+**Why.** The original `SmallCNN` (about 25K parameters, random initialization) reached **47.5%** on a few hundred hand images. Studio's own transfer learning reached 87% on the same data. Fine-tuning MobileNetV2 brought the block to 88–97%.
 
 - **Pros:**
   - Works on small datasets.
   - It is ExecuTorch's own XNNPACK example model.
   - Its ops (convolution, ReLU6, pooling, linear) lower cleanly to both XNNPACK and HTP.
-  - torchvision's BSD licence.
+  - torchvision's BSD license.
 - **Cons:**
   - About 3.5M parameters: 8.9 MB float, about 2.5 MB int8.
   - Too large for an MCU.
-- **Alternatives:** timm (more dependencies, same result). `SmallCNN` is still available with `--no-pretrained`.
+- **Alternatives:** timm (more dependencies, same result). `SmallCNN` is still available with `--no-pre-trained`.
 
 ### 4. 8a8w per-channel post-training quantization, 200 calibration images
 
@@ -66,7 +66,7 @@ Each entry gives what was chosen, why, the trade-offs, and the alternatives that
 
 ### 5. Compile for `QcomChipset.QCS9100`
 
-**Why.** The IQ‑9075 is not listed by name in ExecuTorch's chipset enum. QCS9100 is the same silicon family (SA8775P), with **Hexagon v73** and 8 MB VTCM. The board's Qualcomm packages ship the v73 skel libraries under `sa8775p/`.
+**Why.** The IQ-9075 is not listed by name in ExecuTorch's chipset enum. QCS9100 is the same silicon family (SA8775P), with **Hexagon v73** and 8 MB VTCM. The board's Qualcomm packages ship the v73 skel libraries under `sa8775p/`.
 
 - **Status:** confirmed on the device. The model loads, runs and matches the expected accuracy.
 
@@ -76,12 +76,12 @@ Each entry gives what was chosen, why, the trade-offs, and the alternatives that
 
 - **Cost:** the two artifacts mean different things. `export_report.json` records `output_semantics`, and the app handles each backend correctly.
 
-### 7. The QNN export is optional and never fails training; a build-time smoke test guards the setup
+### 7. The QNN export is optional, and a build-time smoke test helps catch setup problems early
 
-**Why.** NPU export is an extra. A user who only wants the CPU model should never lose a training run to an SDK problem.
+**Why.** NPU export is an extra. A user who only wants the CPU model should not lose a training run to an SDK problem.
 - `export_qnn` turns every exception into a report with `status: failed` and a `reason`.
-- Setup problems are caught earlier by `qnn_smoke.py` during `docker build`, so a broken image never reaches Studio.
-- `status: ok` requires `QnnBackend` in the graph, so a model where every op silently ran on the CPU can't pass as an NPU model.
+- Setup problems are caught earlier by `qnn_smoke.py` during `docker build`, so a broken image is less likely to reach Studio.
+- `status: ok` requires `QnnBackend` in the graph, so a model where every op silently ran on the CPU cannot pass as an NPU model.
 
 ### 8. Build the Qualcomm SDK into the Docker image
 
@@ -89,7 +89,7 @@ Each entry gives what was chosen, why, the trade-offs, and the alternatives that
 
 - **Pros:**
   - Deterministic: the SDK version is fixed by the image.
-  - Studio's builder can reach Qualcomm's download server at build time (verified).
+  - Studio's builder can reach Qualcomm download server at build time (verified).
 - **Cons:**
   - The image is several GB.
   - Each push rebuilds a large layer.
@@ -151,8 +151,8 @@ Each entry gives what was chosen, why, the trade-offs, and the alternatives that
 
 **Why.**
 - The classification block was solid: 92–97%.
-- The ExecuTorch FOMO detection block, after a rewrite on a pretrained backbone, matched Studio's FOMO offline (about 63% F1) but got only 4 of 15 right in a live trial on the board.
-- YOLO via Ultralytics was ruled out (AGPL licence).
+- The ExecuTorch FOMO detection block, after a rewrite on a pre-trained backbone, matched Studio's FOMO offline (about 63% F1) but got only 4 of 15 right in a live trial on the board.
+- YOLO via Ultralytics was ruled out (AGPL license).
 
 
 - **Cost:**
@@ -161,14 +161,14 @@ Each entry gives what was chosen, why, the trade-offs, and the alternatives that
 
 ### 15. The LLM on the NPU through llama.cpp's Hexagon backend (Q4_0)
 
-**Why.** Qualcomm's toolchain image cross-compiles llama.cpp with `GGML_HEXAGON`, and Q4_0 is the format the HTP kernels are built for.
+**Why.** Qualcomm toolchain image cross-compiles llama.cpp with `GGML_HEXAGON`, and Q4_0 is the format the HTP kernels are built for.
 
-**Measured on the IQ‑9075 (Llama 3.2 1B Q4_0):**
+**Measured on the IQ-9075 (Llama 3.2 1B Q4_0):**
 
 | | NPU | CPU | |
 |---|---|---|---|
 | Prompt processing | **1619 t/s** | 282 t/s | 5.7× faster on the NPU |
-| Token generation | 45 t/s | **57 t/s** | 25% faster on the CPU |
+| Token generation | 45 t/s | **57 t/s** | Up to 25% faster on the CPU |
 
 So the NPU is not used for speed here. It is used to keep the CPU free for the camera, MJPEG encoding and the fallback.
 

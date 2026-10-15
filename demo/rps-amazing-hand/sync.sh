@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Deploy this repository from the local machine to the specified EVK.
 #
 # Run this script from the repository root:

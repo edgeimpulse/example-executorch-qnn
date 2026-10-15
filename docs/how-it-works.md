@@ -1,6 +1,6 @@
 # How it works
 
-This walks one trained model from Studio to the NPU and names the file that does each step. It starts with the custom blocks, because they are the reusable part. The board runtime and the demo come after.
+This walkthrough follows one trained model from Studio to the NPU and names the file that does each step. It starts with the custom blocks, because they are the reusable part. The board runtime and the demo come after.
 
 ## 1. The Edge Impulse block contracts used
 
@@ -18,7 +18,7 @@ This walks one trained model from Studio to the NPU and names the file that does
 
 **Extra files.** Other files in the output directory, here `model.pte`, `model_qnn.pte` and `export_report.json`, are **kept with the learning block's output**, but Studio does not show them in the UI. A deployment block can read them (next section). That is the hook this project uses.
 
-**Network at runtime.** None. Learning blocks run with no network access, so anything downloaded on first use (ImageNet weights, the Qualcomm SDK) has to be built into the image at `docker build` time.
+**Network at runtime.** None. Learning blocks run without network access, so anything downloaded on first use (ImageNet weights, the Qualcomm SDK) has to be built into the image at `docker build` time.
 
 ### Deployment block (`blocks/deploy-executorch`)
 
@@ -37,7 +37,7 @@ This walks one trained model from Studio to the NPU and names the file that does
 1. Loads the splits.
 2. Converts NHWC to **contiguous** NCHW (`np.ascontiguousarray`). A transposed view keeps channels-last strides, and the XNNPACK partitioner rejects channels-last inputs.
 3. Builds `PretrainedClassifier`: torchvision MobileNetV2 with ImageNet weights and a new linear head sized to the dataset. The weights are fetched during `docker build` into `TORCH_HOME=/opt/torch`.
-4. Trains with Adam and cross-entropy, with flip/affine/colour augmentation, keeping the best epoch.
+4. Trains with Adam and cross-entropy, with flip/affine/color augmentation, keeping the best epoch.
 
 It then exports:
 
@@ -133,12 +133,12 @@ The same source builds on a laptop against the pip wheel's C++ SDK with XNNPACK 
 `app/pte_perception.py` → `HybridClassifier` (`app/npu_inference.py`) → `NpuClient` (`app/npu_client.py`):
 
 - **Each frame:**
-  1. Centre-crop, resize to the **NPU model's** input size (from INFO), RGB, /255, NCHW.
+  1. Center-crop, resize to the **NPU model's** input size (from INFO), RGB, /255, NCHW.
   2. Send it to the socket and apply softmax to the logits.
   3. If the call fails, reprocess the same frame at the **CPU model's** size and run `models/model.pte` with the ExecuTorch Python runtime. That model has softmax built in.
 - **Reconnects** are attempted every 5 s, and a log line marks each change: `NPU ACTIVE` / `CPU FALLBACK`.
 - **Gates.** The probabilities are averaged over 5 frames, then must pass confidence ≥ 0.75, a margin ≥ 0.35 over the runner-up, and `unknown` ≤ 0.15. Otherwise there is no detection, and an empty round resolves as "no gesture".
-- **The LLM** is a separate process: `llama-server --device HTP0 -ngl 99`, with Llama‑3.2‑1B Q4_0. It opens its own FastRPC session on the same cDSP. The two processes share the NPU but nothing else.
+- **The LLM** is a separate process: `llama-server --device HTP0 -ngl 99`, with Llama-3.2-1B Q4_0. It opens its own FastRPC session on the same cDSP. The two processes share the NPU but nothing else.
 - **Speech** is a third process, `python -m piper.http_server`, and the only one on the **CPU** — the NPU is already carrying the two above. `app/speech.py` POSTs a line, gets a WAV back, strips it to raw PCM and writes that into a long-lived audio-player pipe. The fixed clips (countdown words, lead-ins) are synthesized once at startup and cached on disk, so the cues that must land on a beat never wait on synthesis.
 - **The hand** is `app/actuation.py` over a serial link to eight servos. Every method offloads its blocking I/O with `asyncio.to_thread`, because the same event loop times the countdown audio.
 

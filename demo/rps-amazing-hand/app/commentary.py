@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Commentator contract + implementations: NullCommentator and a llama.cpp client."""
 
 import json

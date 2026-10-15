@@ -1,3 +1,6 @@
+// Copyright (c) 2026 EdgeImpulse Inc.
+// SPDX-License-Identifier: BSD-3-Clause-Clear
+
 // npu_server: keeps a QNN (Hexagon HTP) ExecuTorch program loaded and serves
 // inference over a Unix domain socket, so a Python app can use the NPU at
 // camera frame rate without reloading the model.

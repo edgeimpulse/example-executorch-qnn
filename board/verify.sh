@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Prove the model runs on the NPU and matches the accuracy predicted at export.
 #
 #   ./verify.sh ~/npu-model

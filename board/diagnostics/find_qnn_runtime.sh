@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Read-only: where the QNN runtime libraries, headers and Hexagon skel libraries
 # are on this board. Use it to set ADSP_LIBRARY_PATH on boards other than the IQ-9075.
 echo "== QNN backend/system libs (main + stub + prepare)"

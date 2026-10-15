@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Actuator contract + implementations: NullActuator, or the Amazing Hand."""
 
 import asyncio

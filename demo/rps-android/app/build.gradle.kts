@@ -1,3 +1,6 @@
+// Copyright (c) 2026 EdgeImpulse Inc.
+// SPDX-License-Identifier: BSD-3-Clause-Clear
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")

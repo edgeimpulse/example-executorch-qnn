@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Server-side detection overlay: draws boxes onto a frame and JPEG-encodes it.
 
 Boxes and labels mirror the former client canvas (per-gesture color, "gesture NN%"

@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Classify one photo with an image-classifier model.pte, on any computer.
 
     pip install executorch==1.5.1 torch==2.14.0 opencv-python numpy

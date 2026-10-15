@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Speaker contract + implementations: NullSpeaker, Piper, audio-analytics TTS.
 
 Both real backends synthesize over local HTTP and play raw 16-bit mono PCM

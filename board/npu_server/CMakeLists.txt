@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Built as part of examples/qualcomm (see ../steps/build_npu_server.sh): same link set as
 # qnn_executor_runner, plus the Module and Tensor extensions.
 add_executable(npu_server ${CMAKE_CURRENT_LIST_DIR}/npu_server.cpp)

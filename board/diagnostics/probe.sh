@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Read-only probe of the board: architecture, OS, QNN packages and libraries,
 # DSP device nodes, and which ExecuTorch backends a Python env registers.
 #   diagnostics/probe.sh            (PY=/path/to/python to check another env)

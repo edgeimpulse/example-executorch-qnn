@@ -1,21 +1,26 @@
 # Add the NPU export to the other ExecuTorch blocks
 
-The same six changes that gave the image classifier a NPU output work for Edge Impulse's other public ExecuTorch learning blocks:
+The same six changes gave the image classifier an NPU output.
+They also work for Edge Impulse's other public ExecuTorch learning blocks:
 - [timeseries](https://github.com/edgeimpulse/executorch-pytorch-timeseries-block)
 - [keyword spotting (KWS)](https://github.com/edgeimpulse/executorch-pytorch-kws-block)
 - [FOMO object detection](https://github.com/edgeimpulse/executorch-pytorch-object-detection-fomo-block)
 
-One command applies them. The deployment block and the board runtime need no changes. What differs per block is everything *around* the model: how the device produces the model's input, and how it reads the output.
+One command applies the changes.
 
-This guide starts from those repositories **as published**, on ExecuTorch 0.4.0 and torch 2.5.0.
+The deployment block and the board runtime need no changes.
+
+What differs per block is the model's input path and output decoding.
+
+This guide starts from those repositories **as published**, on ExecuTorch 0.4.0 and torch 2.5.0, and applies the same pattern that worked for the image block.
 
 ## At a glance
 
 | Block | Model (input) | Port | NPU benefit | Extra work on the device |
 |---|---|---|---|---|
-| KWS | 2D CNN on an MFE/MFCC spectrogram `[1, 1, frames, coeffs]` | `apply_port.py` | Modest | Compute the **same MFE/MFCC features** Studio computed, from live audio |
+| KWS | 2D CNN | `apply_port.py` | Modest | MFE/MFCC |
 | FOMO | Fully convolutional, per-cell classes `[1, 3, H, W] → [1, C, H/8, W/8]` | `apply_port.py` (FOMO recipe) | **Best of the three:** the largest model and inputs | Softmax per cell, then decode cells into object centroids |
-| Timeseries, MLP | `[1, F]` features from any DSP block | `apply_port.py` | Little: the model has about 4K parameters, so the fixed cost of each NPU call outweighs the compute | Compute the **same DSP features** (e.g. spectral analysis) on the device |
+| Timeseries, MLP | `[1, F]` | `apply_port.py` | Small model | Same DSP features |
 | Timeseries, Conv1d | `[1, axes, samples]` raw window | `apply_port.py` | Little (about 8K parameters) | Window the raw sensor stream the way Studio did |
 
 What was checked in this repository, without hardware, for all four models:
@@ -30,8 +35,8 @@ What was **not** run: the final QNN lowering. The build-time smoke test and the 
 
 - An x86_64 machine with Docker. The QNN compiler ships only in the x86_64 ExecuTorch wheel.
 - This repository cloned next to the block you are porting.
-- An Edge Impulse project of the matching type: time series with a DSP block, audio with MFE/MFCC, or object detection with FOMO-style labels.
-- For the board: the IQ‑9075 set up as in [board/README.md](../board/README.md). The ExecuTorch + QNN build there is shared by every block.
+- An Edge Impulse project of the matching type: time series with a processing block, audio with MFE/MFCC, or object detection with FOMO-style labels.
+- For the board: the IQ-9075 set up as in [board/README.md](../board/README.md). The ExecuTorch + QNN build there is shared by every block.
 
 ## Option A: one command
 
@@ -72,7 +77,7 @@ Since torch 2.9, `torch.onnx.export` uses the new dynamo-based exporter by defau
 **3. Copy `qnn_export.py` and `qnn_smoke.py`** from `blocks/learning-image-classifier/`, unchanged. `qnn_export()` is task-agnostic:
 - It takes any single float32 input layout.
 - It reports top-1 accuracy for classifiers, or the score from an `eval_fn` you pass for any other task.
-- It never raises, so training always succeeds and `export_report.json` explains any NPU failure.
+- It records any failure in `export_report.json`, so the training run keeps the CPU path and leaves a clear reason for the NPU export problem.
 
 **4. `Dockerfile`: replace it with `porting/kit/Dockerfile`.** Compared with the public one, it:
 - pins `linux/amd64`
@@ -222,13 +227,13 @@ SVC=kws-npu ./verify.sh ~/kws                                          # input s
 
 The `HybridClassifier` pattern (NPU first, CPU `.pte` fallback on each call; [`npu_inference.py`](../demo/rps-amazing-hand/app/npu_inference.py)) carries over unchanged. Pass `sock_path`, or set `RPS_NPU_SOCKET`, because its default is the RPS service.
 
-**The real work for KWS and timeseries is the input.** The model expects the **same features** Studio's DSP block produced: MFE or MFCC frames, spectral-analysis values, or a raw window with the same length and axis order. Those have to be computed on the device from live audio or sensor data, with the same parameters. Those are shown on Studio's DSP block page, and in `dsp_metadata.json`, which the deployment block copies into `_inputs/` when Studio provides it. This is independent of the NPU. It is the same open item as the CPU path in the [blog post](https://www.edgeimpulse.com/blog/from-pytorch-to-the-edge-getting-started-with-executorch-and-edge-impulse/), "ship DSP parameters in the deployment package". Until it exists, check the models on the device with `05` and `08` and Studio's test features.
+**A large part of the work for KWS and timeseries sits in the input path.** The model consumes the same features Studio's processing block produced: MFE or MFCC frames, spectral-analysis values, or a raw window. Those features must be recreated on the device with the same parameters. `dsp_metadata.json` carries the metadata, and the deployment block copies it into `_inputs/` when Studio provides it. This remains a CPU-side issue, not an NPU one.
 
 ## Known caveats
 
-- **A broken SDK path aborts the process.** If `QNN_SDK_ROOT` points at a folder without the QNN libraries, ExecuTorch's C++ layer aborts. That is not a Python exception, so the "never fails training" rule could not catch it. `qnn_export.py` now checks the path first and reports `failed` instead. The Docker image's smoke test also prevents it.
+- **A broken SDK path can abort the process.** If `QNN_SDK_ROOT` points at a folder without the QNN libraries, ExecuTorch's C++ layer can abort. That is not a Python exception, so the training flow can still fail outside the block's normal error handling. `qnn_export.py` now checks the path first and reports `failed` instead. The Docker image's smoke test also reduces the chance of reaching that path.
 - **Tiny models.** Every NPU call has a fixed cost: a FastRPC round trip to the DSP, plus the socket. For the image model the service measured 0.70 ms per call from Python, of which 0.23 ms was NPU time. A model with a few thousand parameters computes in far less than that on the CPU, so expect the timeseries models to be faster there. Port them for one consistent pipeline and CPU offload, not speed.
 - **Conv1d pooling.** In the CPU `.pte`, XNNPACK leaves the Conv1d model's max-pool on portable CPU kernels (`tools/inspect_pte.py` shows `max_pool2d_with_indices`, `squeeze`, `unsqueeze` outside the delegate). The QNN backend has a builder for that op, so it should stay on the NPU. Confirm it in `export_report.json` → `delegation.non_delegated_ops`.
 - **FOMO accuracy.** Studio's FOMO (62% F1 on the RPS data) beat the public `FomoNet`, whose receptive field is about 15 px. A MobileNetV2-backbone rewrite matched Studio offline. Port the version you intend to use; the recipe covers both.
-- **Optimistic accuracy.** The public blocks keep the last epoch, while the image block keeps the best epoch on the test split. Either way, add a validation split before trusting the absolute numbers.
+- **Optimistic accuracy.** The public blocks keep the last epoch, while the image block keeps the best epoch on the test split. Either way, add a validation split before trusting the reported numbers.
 - **Patches can go stale.** If the public repositories change, `apply_port.py` names the edit points it cannot find and changes nothing. Port that block by hand with Option B. Use a clean checkout, so `git checkout . && git clean -fd` gets you back.

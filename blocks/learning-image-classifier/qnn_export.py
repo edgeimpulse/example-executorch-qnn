@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Lower a trained PyTorch classifier to an ExecuTorch .pte for the Qualcomm
 QNN backend (Hexagon HTP / NPU).
 

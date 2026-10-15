@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """A stand-in for board/npu_server that runs a CPU .pte instead of the NPU.
 
 It speaks the exact same UNIX-socket protocol, so the demo app's NPU path

@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """FastAPI app: camera feed, live detection overlay during every live-feed phase,
 the game itself, and the freeze-frame capture.
 

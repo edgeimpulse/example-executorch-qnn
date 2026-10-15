@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Install a prebuilt NPU runtime (made by package.sh on another board) -- no build.
 #
 #   ./install-prebuilt.sh npu-runtime-v1.5.1-qnn2.46.0-ubuntu24.04-aarch64.tar.gz \

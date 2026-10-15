@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Edge Impulse custom deployment block: export to ExecuTorch (.pte).
 
 Edge Impulse invokes this with:

@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Training entrypoint for the Edge Impulse PyTorch custom learning block.
 
 Edge Impulse passes the following arguments automatically:

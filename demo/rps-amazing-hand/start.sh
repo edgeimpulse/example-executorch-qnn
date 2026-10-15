@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Starts the rock-paper-scissors server.
 # Run from the project root: ./start.sh
 # Select a camera device without prompting: ./start.sh /dev/video2

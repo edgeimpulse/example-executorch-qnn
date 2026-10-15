@@ -1,15 +1,15 @@
 # Speech and actuation
 
-The two parts of the demo that are neither the model nor the game: the voice
-that comments on each round, and the robot hand that throws the machine's
-gesture. Both are optional, both run locally, and both are the kind of thing
-that silently does nothing when it is misconfigured — which is why most of this
-page is about telling the failure modes apart.
+The two parts of the demo that are neither the model nor the game are the voice
+that comments on each round and the robot hand that throws the machine's
+gesture. Both are optional and both run locally. They also silently do nothing
+when they are misconfigured, which is why most of this page is about telling the
+failure modes apart.
 
 - [Where the compute goes](#where-the-compute-goes)
 - [Architecture](#architecture)
 - [Speech: choosing a backend](#speech-choosing-a-backend)
-- [Speech: the licence arrangement](#speech-the-licence-arrangement)
+- [Speech: the license arrangement](#speech-the-license-arrangement)
 - [Speech: audio output on an unknown board](#speech-audio-output-on-an-unknown-board)
 - [Speech: sample rate](#speech-sample-rate)
 - [The Amazing Hand](#the-amazing-hand)
@@ -24,7 +24,7 @@ setting and its default. This page is the reasoning.
 
 ## Where the compute goes
 
-By the time speech is added, three subsystems want hardware on one board. The
+By the time speech is added, three subsystems want hardware on one board. That
 split is deliberate:
 
 | Subsystem | Runs on | Why there |
@@ -102,7 +102,7 @@ implies `melo`, so a setup predating this setting keeps the backend it had.
 | Runs on | CPU (onnxruntime) | The container's own stack |
 | Voice quality | Clear and intelligible; prosody is flatter — recognizably a 2022-era VITS | Noticeably more natural |
 | Sample rate | 22.05 kHz (medium) / 16 kHz (low), read from the audio | 44.1 kHz |
-| Licence | GPL-3.0-or-later | Unknown to this project |
+| License | GPL-3.0-or-later | Unknown to this project |
 
 **Piper is the default because it is the only one anyone can reproduce.** 
 
@@ -142,13 +142,13 @@ Step 2 runs during warm-up's priming call, before any player exists and before
 any clip is cached, so the correction costs nothing and cache keys are computed
 at the correct rate. Step 1 exists so the common case never needs step 2.
 
-The cache key is `engine | voice | rate | speaking-rate | text`, so switching
-voice or backend invalidates only the affected clips rather than requiring a
-manual cache clear, and stale files are pruned after each successful warm-up.
+The cache key is `engine | voice | rate | speaking-rate | text`. Switching voice
+or backend invalidates only the affected clips rather than requiring a manual
+cache clear. Stale files are pruned after each successful warm-up.
 
 ---
 
-## The Amazing Hand
+## The amazing hand
 
 Eight SCS0009 serial servos, two per finger, driven through
 [`rustypot`](https://pypi.org/project/rustypot/)'s `Scs0009PyController` at

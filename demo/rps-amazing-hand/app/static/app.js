@@ -1,3 +1,6 @@
+// Copyright (c) 2026 EdgeImpulse Inc.
+// SPDX-License-Identifier: BSD-3-Clause-Clear
+
 // Single /ws connection carries two kinds of message:
 //   {kind: "match", ...}       -- full Match snapshot, drives scoreboard/history/phase
 //   {kind: "commentary", ...}  -- one round's remark, streamed token-by-token

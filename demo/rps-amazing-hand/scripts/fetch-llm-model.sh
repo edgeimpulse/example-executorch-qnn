@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Download the GGUF used for round commentary into models/.
 #
 #   ./scripts/fetch-llm-model.sh

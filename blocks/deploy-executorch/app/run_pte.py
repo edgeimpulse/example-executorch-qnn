@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Standalone ExecuTorch runtime harness.
 
 Loads a `.pte` program and runs a single forward pass. Use this to smoke-test the

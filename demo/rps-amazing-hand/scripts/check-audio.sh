@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Verify that this board can speak, and say which stage fails if it cannot.
 #
 #   ./scripts/check-audio.sh                          run every check

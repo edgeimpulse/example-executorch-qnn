@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Shared data model. Imports only config; every other module imports this."""
 
 from dataclasses import dataclass, field

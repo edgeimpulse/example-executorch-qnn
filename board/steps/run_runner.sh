@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Run model_qnn.pte on the Hexagon NPU with the C++ qnn_executor_runner.
 # One random input, quickest "does it run at all" check. verify.sh calls this.
 #   steps/run_runner.sh /path/to/model_qnn.pte [H W]        image models (3 channels, default 96 96)

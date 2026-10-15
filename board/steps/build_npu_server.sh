@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Build the npu_server sidecar inside the ExecuTorch examples build (after
 # build_runtime.sh), then stage the runtime into $DIST:
 #   npu_server  libqnn_executorch_backend.so  qnn_executor_runner  VERSIONS

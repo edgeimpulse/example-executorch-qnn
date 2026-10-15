@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Install the runtime in $DIST as a systemd service that keeps a model on the NPU.
 #   steps/install_service.sh /path/to/model_qnn.pte [/path/to/export_report.json]
 #   SVC=kws-npu steps/install_service.sh kws_qnn.pte     # another model: own service + socket

@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # x86_64 only: ExecuTorch's QNN ahead-of-time compiler ships in the x86_64 wheel.
 # Pinning the platform matters when building on Apple Silicon.
 FROM --platform=linux/amd64 python:3.11-slim

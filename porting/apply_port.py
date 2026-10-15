@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Add the Qualcomm NPU (QNN) export to one of Edge Impulse's public ExecuTorch
 learning blocks -- the recipe in docs/porting-to-other-blocks.md, automated.
 

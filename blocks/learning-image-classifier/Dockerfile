@@ -1,3 +1,6 @@
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Use a slim Python base. CPU-only training keeps the image small; switch to an
 # nvidia/cuda base image if you need GPU acceleration.
 # QNN lowering only ships for x86_64 Linux, so pin the platform (matters when

@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Package this board's built NPU runtime so other boards can skip the build.
 #   ./package.sh [output-folder]       (after setup.sh)
 # Produces npu-runtime-<executorch>-qnn<version>-<os>-aarch64.tar.gz with npu_server,

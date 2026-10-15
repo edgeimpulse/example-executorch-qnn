@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Build ExecuTorch (ET_TAG, default v1.5.1) with the Qualcomm QNN backend natively on
 # the board, plus qnn_executor_runner. Verified on an IQ-9075 EVK (Ubuntu 24.04,
 # apt QNN 2.46). Based on backends/qualcomm/scripts/build.sh --enable_linux_embedded,

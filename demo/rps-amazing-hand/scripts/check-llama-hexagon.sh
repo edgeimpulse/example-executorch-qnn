@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Verify that llama.cpp is really running on the Hexagon NPU on this board,
 # and measure what it buys you over CPU.
 #

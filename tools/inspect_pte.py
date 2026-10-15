@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Show what is inside an ExecuTorch .pte: which backend(s) it was lowered to,
 how much of the graph they own, what still runs as portable CPU kernels, and
 the input/output tensors.

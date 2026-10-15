@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """End-to-end test of the running NPU service through the Python client.
 
     ~/npu-tools/bin/python steps/test_npu_service.py X_split_test.npy Y_split_test.npy   (verify.sh calls this)

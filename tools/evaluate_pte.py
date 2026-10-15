@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 """Top-1 accuracy of a CPU ExecuTorch classifier .pte on Edge Impulse's test split -- on a laptop.
 
     python tools/evaluate_pte.py model.pte X_split_test.npy Y_split_test.npy [--labels labels.txt]

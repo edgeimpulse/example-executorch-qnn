@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) 2026 EdgeImpulse Inc.
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+
 # Cross-compile llama.cpp with the Snapdragon Hexagon (HTP) backend.
 #
 # RUN THIS ON AN x86_64 MACHINE WITH DOCKER, not on the EVK. Qualcomm's toolchain
