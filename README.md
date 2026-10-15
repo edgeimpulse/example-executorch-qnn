@@ -4,8 +4,8 @@ Use a custom learning block in [**Edge Impulse Studio**](https://www.edgeimpulse
 
 | Artifact | Runs on | How it is made |
 |---|---|---|
-| `model.pte` | **Any Arm or x86 CPU** with the ExecuTorch runtime: Linux boards and laptops, Android phones, and more. The same file runs on a Qualcomm IQ-9075 board, an x86 Linux machine, and a Samsung Galaxy S26. | `torch.export`, then the XNNPACK partitioner |
-| `model_qnn.pte` | **The Hexagon NPU** on a Qualcomm Dragonwing IQ-9075, when you want hardware acceleration | PT2E int8 quantization with `QnnQuantizer`, then lowering through the QNN backend for `QCS9100` (Hexagon v73) |
+| `model.pte` | **Any Arm or x86 CPU** with the ExecuTorch runtime: Linux boards and laptops, Android phones, and more. The same file runs on a Qualcomm® IQ-9075 board, an x86 Linux machine, and a Samsung Galaxy S26. | `torch.export`, then the XNNPACK partitioner |
+| `model_qnn.pte` | **The Hexagon NPU** on a Qualcomm Dragonwing™  IQ-9075, when you want hardware acceleration | PT2E int8 quantization with `QnnQuantizer`, then lowering through the QNN backend for `QCS9100` (Hexagon v73) |
 
 **This repository is a starting point for your own model.** The blocks take whatever image data your Studio project holds; nothing here is specific to one problem. A trained rock-paper-scissors classifier is on the [Releases](../../releases) page so you can exercise the tooling before training anything, and the same flag works on the timeseries, keyword-spotting and FOMO blocks ([porting](docs/porting-to-other-blocks.md)).
 
